@@ -1,0 +1,6 @@
+fastapi[all] 
+uvicorn[standard]
+aiohttp
+sqlalchemy
+python-jose
+passlib[bcrypt]
