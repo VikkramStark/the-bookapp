@@ -1,14 +1,16 @@
 import { StyleSheet, View ,Text, Image, ImageBackground} from 'react-native';
 import { ScrollView } from 'react-native';
+import { Link } from 'expo-router';
 type homeScrollProps={
-    title:string
+    title:string,
+    goto:string
 
 }
-export default function HomeScroll(props:homeScrollProps){
+export default function HomeScroll({goto,title}:homeScrollProps){
 return(<View className='mb-4'>
  <View className='flex justify-between px-6 flex-row '>
-    <Text className='text-xl font-semibold'>{props.title}</Text>
-    <Text className='text-neutral-600'>view all</Text>
+    <Text className='text-xl font-semibold'>{title}</Text>
+    <Link href={goto} className='text-neutral-600 pl-4'>view all</Link>
 </View>
         <ScrollView horizontal={true}> 
           

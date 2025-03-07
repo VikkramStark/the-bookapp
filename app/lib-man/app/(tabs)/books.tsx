@@ -1,11 +1,13 @@
-import { View, Text } from "react-native";
-import React from "react";
-
+import { View, Text, Image } from 'react-native';
+import React from 'react';
+import BookCard from '~/components/bookCard';
 const books = () => {
   return (
-    <View  className="flex flex-row flex-1 p-4" style={{gap:10}} >
-      <View className=" bg-pink-400 rounded-lg w-56 h-56"/>
-      {/* <View className=" bg-pink-400 rounded-lg w-56 h-56"/> */}
+    <View className="flex flex-1 flex-row flex-wrap p-4 gap-4">
+      <BookCard days='17 days' isReturn={true}/>
+      <BookCard days='17 days' isReturn={true}/>
+      
+    
     </View>
   );
 };
