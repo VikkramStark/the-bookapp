@@ -6,24 +6,22 @@ type ButtonId = 'Accept' | 'Decline';
 type GradientbuttonProps = {
   id: ButtonId;
 };
+const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, string]; text: string }> = {
+  Decline: {
+    colours: ['#f87171', '#ef4444', '#dc2626'] as const,
+    text: 'Decline',
+  },
+  Accept: {
+    colours: ['#4ade80', '#22c55e', '#16a34a'] as const,
+    text: 'Accept',
+  },
+};
 function Gradientbutton({ id }: GradientbuttonProps) {
-  const buttonData = [
-    {
-      id: 'Decline',
-      colours: ['#f87171', '#ef4444', '#dc2626'],
-      text: 'Decline',
-    },
-    {
-      id: 'Accept',
-      colours: ['#4ade80', '#22c55e', '#16a34a'],
-      text: 'Accept',
-    },
-  ];
-  const button = buttonData.find((item) => item.id == id);
+  const button = buttonDataMap[id];
   return (
     <View className="overflow-hidden rounded-md">
-      <LinearGradient className=" p-4" colors={button?.colours}>
-        <Text className="rounded-lg text-green-50">{button?.text}</Text>
+      <LinearGradient className=" p-4" colors={button.colours}>
+        <Text className="rounded-lg text-green-50">{button.text}</Text>
       </LinearGradient>
     </View>
   );

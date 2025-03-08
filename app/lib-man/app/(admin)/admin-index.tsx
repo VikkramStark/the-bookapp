@@ -6,8 +6,8 @@ export default function Home() {
   return (
     <ScrollView className=''>
      <HomeInfoCard name='Admin' card1text={`Books\navailable`} card1no='1287' card2no='91' card2text={`Books\nborrowed`} />
-      <HomeScroll title="Owned books" goto="/(tabs)/books/" isBorrowed={true} isAdmin={true}/>
-      <HomeScroll title="Wishlist" goto="/(tabs)/wishlist "  isBorrowed={false} isAdmin={true}/>
+      {/* <HomeScroll title="Owned books" goto="/(tabs)/admin/AddBooks" isBorrowed={true} isAdmin={true}/>
+      <HomeScroll title="Wishlist" goto="/(tabs)/admin/AdminLibrary"  isBorrowed={false} isAdmin={true}/> */}
     </ScrollView>
   );
 }
