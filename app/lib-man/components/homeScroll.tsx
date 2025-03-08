@@ -6,7 +6,8 @@ import BookCard from './bookCard';
 type homeScrollProps = {
   title: string;
   goto: string;
-  isBorrowed:boolean
+  isBorrowed:boolean,
+  isAdmin:boolean
 };
 type bookData = {
   id: string;
@@ -76,7 +77,7 @@ const books: bookData[] = [
       returnDays: '42 days',
   },
 ];
-export default function HomeScroll({ goto, title, isBorrowed }: homeScrollProps) {
+export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: homeScrollProps) {
   const booksdata= isBorrowed ?BorrowedBooks : books
   return (
     <View className="mb-4">
@@ -89,9 +90,10 @@ export default function HomeScroll({ goto, title, isBorrowed }: homeScrollProps)
       <FlashList
         data={booksdata}
         horizontal={true}
+        showsHorizontalScrollIndicator={false}
         estimatedItemSize={6}
         renderItem={({ item }) => (
-          <BookCard days={item.returnDays} isReturn={false} imgUrl={item.imgUrl} height='56' width='40'/>
+          <BookCard days={item.returnDays} isReturn={isBorrowed} imgUrl={item.imgUrl} height='56' width='40' isadmin={isAdmin}/>
         )}
       />
 

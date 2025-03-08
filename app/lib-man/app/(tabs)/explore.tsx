@@ -36,7 +36,7 @@ const books: bookData[] = [
 ];
 const explore = () => {
   return (
-    <View className="flex flex-1 px-4 mt-4">
+    <View className="flex flex-1 px-2 mt-4">
       <Text className='text-2xl font-bold px-2'>Available books</Text>
       <FlashList
       estimatedItemSize={6}
@@ -59,7 +59,7 @@ const explore = () => {
                   color="black"
                   className="m-2 self-end rounded-full bg-white p-2"
                 />
-                <Pressable className="m-2 rounded-lg border-2 border-black bg-white p-4">
+                <Pressable className="m-2 rounded-lg border-2 border-black bg-white p-3">
                   <Text>Borrow</Text>
                 </Pressable>
               </View>

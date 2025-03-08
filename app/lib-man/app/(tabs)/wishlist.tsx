@@ -40,7 +40,7 @@ const books: bookData[] = [
 ];
 const wishlist = () => {
   return (
-    <View className="flex flex-1 px-4 mt-4">
+    <View className="flex flex-1 px-2 mt-4">
       <Text className='text-2xl font-bold px-2'>Wishlist</Text>
       <FlashList
         showsVerticalScrollIndicator={false}
@@ -48,7 +48,7 @@ const wishlist = () => {
         numColumns={2}
         estimatedItemSize={6}
         renderItem={({ item }) => (
-            <BookCard days={item.returnDays} isReturn={false} imgUrl={item.imgUrl}  height='64' width='48'/>
+            <BookCard days={item.returnDays} isReturn={false} imgUrl={item.imgUrl}  height='64' width='48' isadmin={false}/>
         )}
       />
     </View>

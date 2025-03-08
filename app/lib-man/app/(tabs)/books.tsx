@@ -40,7 +40,7 @@ const BorrowedBooks: bookData[] = [
 ];
 const Books = () => {
   return (
-    <View className="flex flex-1 px-4 mt-4">
+    <View className="flex flex-1 px-2 mt-4">
       <Text className='text-2xl font-bold px-2'>Borrowed books</Text>
       <FlashList
         numColumns={2}
@@ -54,6 +54,7 @@ const Books = () => {
             imgUrl={item.imgUrl}
             height="64"
             width="48"
+            isadmin={false}
           />
         )}
       />
