@@ -5,7 +5,7 @@ import HomeInfoCard from '~/components/homeInfoCard';
 export default function Home() {
   return (
     <ScrollView className=''>
-     <HomeInfoCard name='Vaishnavi' card1text={`Books\nborrowed`} card1no='5' card2no='1' card2text={`Penalty\nfee`} />
+     <HomeInfoCard name='Admin' card1text={`Books\navailable`} card1no='1287' card2no='91' card2text={`Books\nborrowed`} />
       <HomeScroll title="Owned books" goto="/(tabs)/books/" isBorrowed={true}/>
       <HomeScroll title="Wishlist" goto="/(tabs)/wishlist "  isBorrowed={false}/>
     </ScrollView>

@@ -1,10 +1,48 @@
-import { View, Text } from "react-native";
-import React from "react";
-
+import { View, Text, Switch, Image, Pressable } from 'react-native';
+import React from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useState } from 'react';
 const profile = () => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(!isEnabled);
   return (
-    <View>
-      <Text>profile</Text>
+    <View className="mt-4 flex flex-1  px-4">
+      <Text className="px-2 text-2xl font-bold">Profile</Text>
+      <View className="mt-4 flex gap-3">
+        <View className=" flex  flex-row items-center justify-between rounded-lg bg-amber-300 p-2">
+          <View className="flex flex-row items-center gap-4 ">
+            <Image
+              className="h-16 w-16 rounded-full"
+              source={{
+                uri: 'https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ=',
+              }}
+            />
+            <View className="">
+              <Text className="text-xl font-semibold">Vaishnavi</Text>
+              <Text className="text-neutral-500">Show profile</Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="black" />
+        </View>
+        <View className="flex flex-row items-center justify-between rounded-lg bg-white p-2">
+          <View className="flex flex-row items-center gap-3 ">
+            <Ionicons name="moon" size={24} color="black" />
+            <Text className="text-xl font-semibold">Dark mode</Text>
+          </View>
+          <Switch onValueChange={toggleSwitch} value={isEnabled} ios_backgroundColor="#3e3e3e" />
+        </View>
+        <View className=" flex  flex-row items-center justify-between rounded-lg bg-white p-4">
+          <View className="flex flex-row items-center gap-3 ">
+            <Ionicons name="alert-circle" size={24} color="black" />
+            <Text className="text-xl font-semibold">Report damaged book</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="black" />
+        </View>
+        <Pressable className="flex flex-row items-center justify-center gap-2 rounded-lg bg-neutral-400 p-4 ">
+          <Ionicons name="log-out" size={24} color="black" />
+          <Text className="text-xl font-bold">Logout</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
