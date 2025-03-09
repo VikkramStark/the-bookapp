@@ -5,8 +5,6 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Image, StyleSheet } from 'react-native';
 
 export default function TabLayout() {
-  const [isUser, setIsUser] = useState(false);
-
   return (
     <>
       <Tabs
@@ -52,7 +50,7 @@ export default function TabLayout() {
             headerShown: false,
             tabBarIcon: ({ color }) => (
               <Image
-                style={styles.profileImage}
+                className='h-6 w-6 rounded-full'
                 source={{
                   uri: 'https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ=',
                 }}
@@ -64,11 +62,3 @@ export default function TabLayout() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  profileImage: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-  },
-});

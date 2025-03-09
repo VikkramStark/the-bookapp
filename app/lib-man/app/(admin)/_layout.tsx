@@ -5,13 +5,13 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Image, StyleSheet } from 'react-native';
 
 export default function TabLayout() {
-  const [isUser, setIsUser] = useState(false);
 
   return (
     <>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: 'black',
+          headerShown:false
         }}>
         <Tabs.Screen
           name="admin-index"
@@ -49,11 +49,3 @@ export default function TabLayout() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  profileImage: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-  },
-});
