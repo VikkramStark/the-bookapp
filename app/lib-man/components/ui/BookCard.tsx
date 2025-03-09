@@ -1,6 +1,7 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import Gradientbutton from './GradientButtons';
 type ButtonId = 'penalty' | 'available' | 'holding';
 type BookCardProps = {
   isReturn: boolean;
@@ -12,35 +13,7 @@ type BookCardProps = {
   isAdminLibrary?: boolean;
   bookStatusId?:ButtonId
 };
-type GradientbuttonProps = {
-  id: ButtonId;
-};
-const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, string]; text: string }> = {
-  'penalty':{
-    
-    colours: ['#f87171', '#ef4444', '#dc2626'],
-    text: 'Penalty',
-  },
- 'available': {
-    
-    colours: ['#4ade80', '#22c55e', '#16a34a'],
-    text: 'Available',
-  },
-  'holding':{
-    colours: ['#facc15', '#eab308', '#ca8a04'],
-    text: 'Holding',
-  },
-};
-function Gradientbutton({ id }: GradientbuttonProps) {
-  const button = buttonDataMap[id];
-  return (
-    <View className="overflow-hidden rounded-md">
-      <LinearGradient className=" p-4" colors={button.colours}>
-        <Text className="rounded-lg text-green-50">{button.text}</Text>
-      </LinearGradient>
-    </View>
-  );
-}
+
 const BookCard = ({
   isReturn,
   days,

@@ -1,0 +1,15 @@
+export const ROUTES = {
+    LOGIN: '/(auth)/login',
+    SIGNUP: '/(auth)/signup',
+    FORGOT_PASSWORD: '/(auth)/forgot-password',
+    RESET_PASSWORD: '/(auth)/reset-password',
+    USER_HOME: '/(user)',
+    USER_BOOKS: '/(user)/books',
+    USER_EXPLORE: '/(user)/explore',
+    USER_WISHLIST: '/(user)/wishlist',
+    USER_PROFILE: '/(user)/profile',
+    ADMIN_HOME: '/(admin)',
+    ADMIN_ADD_BOOKS: '/(admin)/add-books',
+    ADMIN_LIBRARY: '/(admin)/library',
+    ADMIN_INBOX: '/(admin)/inbox',
+  };

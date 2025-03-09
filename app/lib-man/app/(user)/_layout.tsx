@@ -3,15 +3,14 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { Image } from 'react-native';
 
-export default function AdminLayout() {
+export default function UserLayout() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         router.replace('/(auth)/login'); // Redirect to login if not authenticated
       }
-      // TODO: Add role-based check for admin access
     });
 
     return () => unsubscribe();
@@ -21,39 +20,53 @@ export default function AdminLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: 'black',
-        headerShown: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'profile',
+          title: 'home',
           headerShown: false,
           tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="library"
+        name="books"
         options={{
-          title: 'library',
+          title: 'books',
           headerShown: false,
           tabBarIcon: ({ color }) => <Ionicons name="library" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="add-books"
+        name="explore"
         options={{
-          title: '',
+          title: 'explore',
           headerShown: false,
-          tabBarIcon: ({ color }) => <Ionicons name="add-circle" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="compass" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="inbox"
+        name="wishlist"
         options={{
-          title: 'inbox',
+          title: 'wishlist',
           headerShown: false,
-          tabBarIcon: ({ color }) => <FontAwesome6 name="inbox" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="bookmark" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'profile',
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Image
+              className="h-6 w-6 rounded-full"
+              source={{
+                uri: 'https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ=',
+              }}
+            />
+          ),
         }}
       />
     </Tabs>

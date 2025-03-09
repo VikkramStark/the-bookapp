@@ -1,13 +1,15 @@
 import { View, Text } from 'react-native';
 import React from 'react';
-import BookCard from '~/components/bookCard';
+import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
+
 type bookStatusType = 'available' | 'penalty' | 'holding';
 type librarydataType = {
   id: string;
   imgUrl: string;
   bookStatus: bookStatusType;
 };
+
 const LibraryData: librarydataType[] = [
   {
     id: '1',
@@ -21,8 +23,7 @@ const LibraryData: librarydataType[] = [
   },
   {
     id: '3',
-    imgUrl:
-      'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/561b1483830519.5d48f1ff93014.jpg',
+    imgUrl: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/561b1483830519.5d48f1ff93014.jpg',
     bookStatus: 'penalty',
   },
   {
@@ -32,8 +33,7 @@ const LibraryData: librarydataType[] = [
   },
   {
     id: '5',
-    imgUrl:
-      'https://images.squarespace-cdn.com/content/v1/573bf9761bbee0b32db4e9ff/1606730424152-JWX44X26UAB841Q3CVXE/Copy+of+Mermaid+Story+book+Childrens+Book+Cover.jpgg',
+    imgUrl: 'https://images.squarespace-cdn.com/content/v1/573bf9761bbee0b32db4e9ff/1606730424152-JWX44X26UAB841Q3CVXE/Copy+of+Mermaid+Story+book+Childrens+Book+Cover.jpgg',
     bookStatus: 'available',
   },
   {
@@ -43,7 +43,7 @@ const LibraryData: librarydataType[] = [
   },
 ];
 
-const AdminLibrary = () => {
+const Library = () => {
   return (
     <View className="mt-4 px-2 flex flex-1">
       <Text className="px-2 text-2xl font-bold">All books</Text>
@@ -69,4 +69,4 @@ const AdminLibrary = () => {
   );
 };
 
-export default AdminLibrary;
+export default Library;

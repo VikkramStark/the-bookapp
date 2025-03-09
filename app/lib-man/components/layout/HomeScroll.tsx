@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, Image, ImageBackground } from 'react-native';
 import { ScrollView } from 'react-native';
 import { Link, Href } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
-import BookCard from './bookCard';
+import BookCard from '../ui/BookCard';
 type homeScrollProps = {
   title: string;
   goto: Href;

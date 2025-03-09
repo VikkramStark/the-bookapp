@@ -2,30 +2,7 @@ import { View, Text, Image, Pressable } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FlashList } from '@shopify/flash-list';
-type ButtonId = 'Accept' | 'Decline';
-type GradientbuttonProps = {
-  id: ButtonId;
-};
-const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, string]; text: string }> = {
-  Decline: {
-    colours: ['#f87171', '#ef4444', '#dc2626'] as const,
-    text: 'Decline',
-  },
-  Accept: {
-    colours: ['#4ade80', '#22c55e', '#16a34a'] as const,
-    text: 'Accept',
-  },
-};
-function Gradientbutton({ id }: GradientbuttonProps) {
-  const button = buttonDataMap[id];
-  return (
-    <View className="overflow-hidden rounded-md">
-      <LinearGradient className=" p-4" colors={button.colours}>
-        <Text className="rounded-lg text-green-50">{button.text}</Text>
-      </LinearGradient>
-    </View>
-  );
-}
+import GradientButton from '../../components/ui/GradientButtons';
 
 const DetailsRow = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -58,7 +35,8 @@ const requestData = [
     },
   },
 ];
-const AdminInbox = ({ imgUrl, details }: { imgUrl: string; details: string[] }) => {
+
+const Inbox = () => {
   return (
     <View className="mt-4 flex flex-1 px-2">
       <Text className="px-2 text-2xl font-bold">Inbox</Text>
@@ -73,15 +51,14 @@ const AdminInbox = ({ imgUrl, details }: { imgUrl: string; details: string[] }) 
               className="h-full w-48 rounded-lg"
               resizeMode="cover"
             />
-            <View className="flex ">
+            <View className="flex">
               <DetailsRow label="ISBN" value={item.details.isbn} />
               <DetailsRow label="Title" value={item.details.title} />
               <DetailsRow label="Author" value={item.details.author} />
               <DetailsRow label="Borrow days" value={item.details.borrowdays} />
-
               <View className="flex flex-row gap-2">
-                <Gradientbutton id="Accept" />
-                <Gradientbutton id="Decline" />
+                <GradientButton id="Accept" />
+                <GradientButton id="Decline" />
               </View>
             </View>
           </View>
@@ -91,4 +68,4 @@ const AdminInbox = ({ imgUrl, details }: { imgUrl: string; details: string[] }) 
   );
 };
 
-export default AdminInbox;
+export default Inbox;
