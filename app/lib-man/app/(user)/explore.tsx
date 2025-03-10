@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native'; // Removed ScrollView
 import React, { useEffect, useState, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from '@shopify/flash-list';
@@ -6,7 +6,19 @@ import { useAuth } from '../../hooks/useAuth';
 import { db } from '../../utils/firebase';
 import { useTheme } from '../../ThemeContext';
 import { Skeleton } from 'moti/skeleton';
-import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, setDoc, getDoc, Timestamp, arrayRemove } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+  setDoc,
+  getDoc,
+  Timestamp,
+  arrayRemove,
+} from 'firebase/firestore';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import GradientButton from '../../components/ui/GradientButtons';
@@ -26,9 +38,8 @@ type Book = {
   description: string;
   publisher: string;
   language: string;
-  quantity: number;
   maxBorrowDays: number;
-  returnDays?: number; // Added returnDays, optional since it’s set dynamically
+  returnDays?: number;
 };
 
 const Explore = () => {
@@ -70,9 +81,8 @@ const Explore = () => {
           description: doc.data().description || 'No description available',
           publisher: doc.data().publisher || 'N/A',
           language: doc.data().language || 'N/A',
-          quantity: doc.data().quantity || 1,
-          maxBorrowDays: doc.data().maxBorrowDays || 14,
-          returnDays: doc.data().returnDays || 0, // Include returnDays from Firestore
+          maxBorrowDays: doc.data().maxBorrowDays || 0,
+          returnDays: doc.data().returnDays || 0,
         }));
 
         setBooks(booksData);
@@ -87,9 +97,9 @@ const Explore = () => {
   }, [user]);
 
   const handleBorrowPress = (book: Book) => {
-    setSelectedBook({ ...book, returnDays: book.maxBorrowDays }); // Default to maxBorrowDays
+    setSelectedBook({ ...book, returnDays: book.maxBorrowDays });
     max.value = book.maxBorrowDays;
-    progress.value = book.maxBorrowDays; // Start slider at max
+    progress.value = book.maxBorrowDays;
     bottomSheetRef.current?.expand();
   };
 
@@ -103,7 +113,7 @@ const Explore = () => {
         isbn: selectedBook.isbn,
         title: selectedBook.title,
         author: selectedBook.author,
-        borrowDays: selectedBook.returnDays, // Use selected days from slider
+        borrowDays: selectedBook.returnDays,
         status: 'pending',
         createdAt: Timestamp.now(),
       });
@@ -133,9 +143,7 @@ const Explore = () => {
       }
 
       setBooks((prevBooks) =>
-        prevBooks.map((b) =>
-          b.id === book.id ? { ...b, isInWishlist: !b.isInWishlist } : b
-        )
+        prevBooks.map((b) => (b.id === book.id ? { ...b, isInWishlist: !b.isInWishlist } : b))
       );
     } catch (error) {
       console.error('Error updating wishlist:', error);
@@ -152,7 +160,7 @@ const Explore = () => {
   if (loading) {
     return (
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
-        <View className="flex h-16 w-full items-center justify-center py-2 mx-2">
+        <View className="mx-2 flex h-16 w-full items-center justify-center py-2">
           {theme === 'dark' ? (
             <Image
               source={require('../../assets/logo-white-side.png')}
@@ -167,16 +175,16 @@ const Explore = () => {
             />
           )}
         </View>
-        <Text className="px-2 text-2xl font-bold mx-2" style={{ color: headingColor }}>
+        <Text className="mx-2 px-2 text-2xl font-bold" style={{ color: headingColor }}>
           Available books
         </Text>
         {theme === 'dark' ? (
-          <View className="flex-1 flex-row gap-4 mx-2 justify-center mt-2">
+          <View className="mx-2 mt-2 flex-1 flex-row justify-center gap-4">
             <Skeleton show={loading} colorMode="light" height={224} width={176} />
             <Skeleton show={loading} colorMode="light" height={224} width={176} />
           </View>
         ) : (
-          <View className="flex-1 flex-row gap-4 mx-2 justify-center mt-2">
+          <View className="mx-2 mt-2 flex-1 flex-row justify-center gap-4">
             <Skeleton show={loading} colorMode="dark" height={224} width={176} />
             <Skeleton show={loading} colorMode="dark" height={224} width={176} />
           </View>
@@ -203,8 +211,8 @@ const Explore = () => {
         )}
       </View>
 
-      <View className="flex flex-1 px-2 mt-4">
-        <Text className="text-2xl font-bold px-2" style={{ color: headingColor }}>
+      <View className="mt-4 flex flex-1 px-2">
+        <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>
           Available books
         </Text>
         {books.length === 0 ? (
@@ -229,8 +237,7 @@ const Explore = () => {
                   <View className="absolute end-0 flex h-full justify-between">
                     <Pressable
                       onPress={() => toggleWishlist(item)}
-                      className="m-2 self-end rounded-full bg-white p-2"
-                    >
+                      className="m-2 self-end rounded-full bg-white p-2">
                       <Ionicons
                         name={item.isInWishlist ? 'heart' : 'heart-outline'}
                         size={24}
@@ -239,8 +246,7 @@ const Explore = () => {
                     </Pressable>
                     <Pressable
                       onPress={() => handleBorrowPress(item)}
-                      className="m-2 rounded-lg border-2 border-black bg-white p-3"
-                    >
+                      className="m-2 rounded-lg border-2 border-black bg-white p-3">
                       <Text>Borrow</Text>
                     </Pressable>
                   </View>
@@ -259,52 +265,68 @@ const Explore = () => {
         enablePanDownToClose={true}
         backgroundStyle={{
           backgroundColor: theme === 'dark' ? '#1F2937' : '#FFFFFF',
-        }}
-      >
-        <BottomSheetView style={{ flex: 1, padding: 16 }}>
+        }}>
+        <BottomSheetView style={{ flex: 1 }}>
           {selectedBook ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <View className="p-4" style={{ flexGrow: 1 }}>
               <Image
                 source={{ uri: selectedBook.imgUrl }}
                 className="h-48 w-32 self-center rounded-lg"
                 resizeMode="cover"
               />
-              <Text
-                className="text-2xl font-bold mt-4 text-center"
-                style={{ color: headingColor }}
-              >
+              <Text className="mt-4 text-center text-2xl font-bold" style={{ color: headingColor }}>
                 {selectedBook.title}
               </Text>
               <Text
-                className="text-lg mt-2 text-center"
-                style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}
-              >
+                className="mt-2 text-center text-lg"
+                style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                 by {selectedBook.author}
               </Text>
               <View className="mt-4">
                 <Text className="text-md" style={{ color: headingColor }}>
-                  ISBN: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.isbn}</Text>
+                  ISBN:
+                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.isbn}
+                  </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Category: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.category}</Text>
+                  Category:
+                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.category}
+                  </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Edition: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.edition}</Text>
+                  Edition:
+                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.edition}
+                  </Text>
+                </Text>
+                <Text className="text-md mt-2" style={{ color: headingColor }} numberOfLines={3}
+  ellipsizeMode="tail">
+                  Description:
+                  <Text
+
+                    style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.description}
+                  </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Description: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.description}</Text>
+                  Publisher:
+                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.publisher}
+                  </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Publisher: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.publisher}</Text>
+                  Language:
+                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.language}
+                  </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Language: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.language}</Text>
-                </Text>
-                <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Quantity: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.quantity}</Text>
-                </Text>
-                <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Max Borrow Days: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.maxBorrowDays}</Text>
+                  Max Borrow Days:
+                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                    {selectedBook.maxBorrowDays}
+                  </Text>
                 </Text>
               </View>
 
@@ -327,12 +349,14 @@ const Explore = () => {
               </View>
 
               {/* Confirm Borrow Button */}
-              <View className="mt-6 flex items-center">
+              <View className="mt-6 flex items-center pb-4">
                 <GradientButton id="Borrow" onPress={handleBorrowConfirm} />
               </View>
-            </ScrollView>
+            </View>
           ) : (
-            <Text>No book selected</Text>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: headingColor }}>No book selected</Text>
+            </View>
           )}
         </BottomSheetView>
       </BottomSheet>
