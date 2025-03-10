@@ -1,18 +1,20 @@
 import { Stack, router } from 'expo-router';
 import { useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../utils/firebase';
+import { useAuth } from '../../hooks/useAuth';
+import { ROUTES } from '../../constants/routes';
 
 export default function AuthLayout() {
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.replace('/(user)'); // Default user screen
-      }
-    });
+  const { user, role, loading } = useAuth();
 
-    return () => unsubscribe();
-  }, []);
+  useEffect(() => {
+    if (!loading && user) {
+      if (role === 'admin') {
+        router.replace(ROUTES.ADMIN_HOME); 
+      } else {
+        router.replace(ROUTES.USER_BOOKS); 
+      }
+    }
+  }, [user, role, loading]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>

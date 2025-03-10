@@ -12,4 +12,4 @@ export const ROUTES = {
     ADMIN_ADD_BOOKS: '/(admin)/add-books',
     ADMIN_LIBRARY: '/(admin)/library',
     ADMIN_INBOX: '/(admin)/inbox',
-  };
+  } as const; 

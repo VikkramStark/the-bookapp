@@ -1,19 +1,42 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '../utils/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import setDoc
+import { auth, db } from '../utils/firebase';
+
+type UserRole = 'user' | 'admin' | null;
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<UserRole>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          setRole(userDoc.data().role || 'user');
+        } else {
+          // If user doc doesn't exist, create one
+          await setDoc(doc(db, 'users', user.uid), {
+            email: user.email,
+            role: 'user', // Default to 'user' role
+            borrowedBooks: [],
+            wishlist: [],
+            penaltyFee: 0,
+          });
+          setRole('user');
+        }
+        setUser(user);
+      } else {
+        setUser(null);
+        setRole(null);
+      }
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  return { user, loading };
+  return { user, role, loading };
 };

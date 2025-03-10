@@ -1,103 +1,113 @@
-import { StyleSheet, View, Text, Image, ImageBackground } from 'react-native';
-import { ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { Link, Href } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
 import BookCard from '../ui/BookCard';
-type homeScrollProps = {
+import { useAuth } from '../../hooks/useAuth';
+import { db } from '../../utils/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+
+type HomeScrollProps = {
   title: string;
   goto: Href;
   isBorrowed: boolean;
   isAdmin: boolean;
 };
-type bookData = {
+
+type Book = {
   id: string;
-  imgUrl: any;
-  returnDays: string;
+  imgUrl: string;
+  returnDays: number;
 };
-const BorrowedBooks: bookData[] = [
-  {
-    id: '1',
-    imgUrl: 'https://www.vandegriftvoice.com/wp-content/uploads/2023/02/24044596-300x450.jpg',
-    returnDays: '1 days',
-  },
-  {
-    id: '2',
-    imgUrl: 'https://www.vandegriftvoice.com/wp-content/uploads/2023/02/10210-300x472.jpg',
-    returnDays: '11 days',
-  },
-  {
-    id: '3',
-    imgUrl: 'https://www.vandegriftvoice.com/wp-content/uploads/2023/02/35224992-300x455.jpg',
-    returnDays: '15 days',
-  },
-  {
-    id: '4',
-    imgUrl: 'https://www.vandegriftvoice.com/wp-content/uploads/2023/02/41057294-300x453.jpg',
-    returnDays: '32 days',
-  },
-  {
-    id: '5',
-    imgUrl: 'https://www.vandegriftvoice.com/wp-content/uploads/2023/02/56732449-300x450.jpg',
-    returnDays: '55 days',
-  },
-];
-const books: bookData[] = [
-  {
-    id: '1',
-    imgUrl: 'https://i.huffpost.com/gen/1039678/original.jpg',
-    returnDays: '5 days',
-  },
-  {
-    id: '2',
-    imgUrl:
-      'https://blog-cdn.reedsy.com/directories/gallery/237/large_99efb4a0449f950cda20ec5bddc93267.jpg',
-    returnDays: '9 days',
-  },
-  {
-    id: '3',
-    imgUrl:
-      'https://bukovero.com/wp-content/uploads/2016/07/Harry_Potter_and_the_Cursed_Child_Special_Rehearsal_Edition_Book_Cover.jpg',
-    returnDays: '17 days',
-  },
-  {
-    id: '4',
-    imgUrl:
-      'https://bookdesigners.com/img/paths/img/containers/assets/blog/Screen-Shot-2021-07-27-at-12.54.01-PM.png/bf638307fb959aeed561fba39126b5ef.png/0301c24109115a432480cddf67d840ea.png',
-    returnDays: '21 days',
-  },
-  {
-    id: '5',
-    imgUrl:
-      'https://www.writersdigest.com/.image/t_share/MTcxMDY0NzcxMzIzNTY5NDEz/image-placeholder-title.jpg',
-    returnDays: '42 days',
-  },
-];
-export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: homeScrollProps) {
-  const booksdata = isBorrowed ? BorrowedBooks : books;
+
+export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: HomeScrollProps) {
+  const { user } = useAuth();
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoading(true);
+      try {
+        if (isAdmin) {
+          const booksQuery = query(
+            collection(db, 'books'),
+            where('status', '==', isBorrowed ? 'borrowed' : 'available')
+          );
+          const booksSnapshot = await getDocs(booksQuery);
+          const booksData = booksSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            imgUrl: doc.data().imgUrl,
+            returnDays: doc.data().returnDays || 0,
+          }));
+          setBooks(booksData);
+        } else {
+          if (!user) return;
+
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          const bookIds = isBorrowed
+            ? userDoc.data()?.borrowedBooks || []
+            : userDoc.data()?.wishlist || [];
+
+          if (bookIds.length === 0) {
+            setBooks([]);
+            setLoading(false);
+            return;
+          }
+
+          const booksQuery = query(collection(db, 'books'), where('__name__', 'in', bookIds));
+          const booksSnapshot = await getDocs(booksQuery);
+          const booksData = booksSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            imgUrl: doc.data().imgUrl,
+            returnDays: doc.data().returnDays || 0,
+          }));
+
+          setBooks(booksData);
+        }
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, [user, isBorrowed, isAdmin]);
+
+  if (loading) {
+    return <ActivityIndicator size="large" className="mt-4" />;
+  }
+
   return (
     <View className="mb-4">
-      <View className="flex flex-row justify-between px-6 ">
+      <View className="flex flex-row justify-between px-6">
         <Text className="text-xl font-semibold">{title}</Text>
         <Link href={goto} className="pl-4 text-neutral-600">
           view all
         </Link>
       </View>
-      <FlashList
-        data={booksdata}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        estimatedItemSize={5}
-        renderItem={({ item }) => (
-          <BookCard
-            days={item.returnDays}
-            isReturn={isBorrowed}
-            imgUrl={item.imgUrl}
-            height="56"
-            width="40"
-            isadmin={isAdmin}
-          />
-        )}
-      />
+      {books.length === 0 ? (
+        <Text className="mt-4 text-center text-lg">No books to display.</Text>
+      ) : (
+        <FlashList
+          data={books}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          estimatedItemSize={5}
+          renderItem={({ item }) => (
+            <BookCard
+              days={item.returnDays.toString()}
+              isReturn={isBorrowed}
+              imgUrl={item.imgUrl}
+              height="56"
+              width="40"
+              isadmin={isAdmin}
+            />
+          )}
+        />
+      )}
     </View>
   );
 }

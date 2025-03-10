@@ -1,21 +1,27 @@
 import { Tabs, router } from 'expo-router';
 import { useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../utils/firebase';
+import { useAuth } from '../../hooks/useAuth';
+import { ROUTES } from '../../constants/routes';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { View, Text } from 'react-native';
 
 export default function AdminLayout() {
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.replace('/(auth)/login'); // Redirect to login if not authenticated
-      }
-      // TODO: Add role-based check for admin access
-    });
+  const { user, role, loading } = useAuth();
 
-    return () => unsubscribe();
-  }, []);
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.replace(ROUTES.LOGIN);
+      } else if (role !== 'admin') {
+        router.replace(ROUTES.USER_HOME);
+      }
+    }
+  }, [user, role, loading]);
+
+  if (loading) {
+    return null; // Optionally show a loading indicator
+  }
 
   return (
     <Tabs
@@ -54,6 +60,14 @@ export default function AdminLayout() {
           title: 'inbox',
           headerShown: false,
           tabBarIcon: ({ color }) => <FontAwesome6 name="inbox" size={24} color={color} />,
+        }}
+      />
+            <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'profile',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <View className='h-6 w-6 rounded-full bg-gray-700 relative items-center justify-center'><Text className='absolute font-bold text-white'>A</Text></View>,
         }}
       />
     </Tabs>

@@ -2,7 +2,8 @@ import { View, Text, KeyboardAvoidingView, Image, ActivityIndicator, Platform, P
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../utils/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../utils/firebase';
 import { Ionicons } from '@expo/vector-icons';
 
 const SignUpScreen = () => {
@@ -30,39 +31,49 @@ const SignUpScreen = () => {
     setPasswordError(!isValidPassword(text));
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     setError(false);
     if (!email || !password) {
       setError(true);
       setErrorMessage("Please enter both your email and password.");
+      return;
     }
-    setIsLoading(true);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        // Navigation handled by (auth)/_layout.tsx
-      })
-      .catch((error) => {
-        setError(true);
-        let errorMessage = error.message;
-        switch (error.code) {
-          case 'auth/invalid-email':
-            errorMessage = 'Invalid email address or password.';
-            break;
-          case 'auth/email-already-in-use':
-            errorMessage = 'This email is already in use.';
-            break;
-          case 'auth/weak-password':
-            errorMessage = 'Password is too weak.';
-            break;
-          default:
-            errorMessage = 'An error occurred. Please try again.';
-        }
-        setErrorMessage(errorMessage);
-      })
-      .finally(() => {
-        setIsLoading(false);
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Create user document in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        role: 'user',
+        borrowedBooks: [],
+        wishlist: [],
+        penaltyFee: 0,
       });
+
+      // Navigation handled by (auth)/_layout.tsx
+    } catch (error: any) {
+      setError(true);
+      let errorMessage = error.message;
+      switch (error.code) {
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address or password.';
+          break;
+        case 'auth/email-already-in-use':
+          errorMessage = 'This email is already in use.';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Password is too weak.';
+          break;
+        default:
+          errorMessage = 'An error occurred. Please try again.';
+      }
+      setErrorMessage(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

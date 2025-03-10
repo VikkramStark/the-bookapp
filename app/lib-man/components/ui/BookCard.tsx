@@ -1,8 +1,10 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import Gradientbutton from './GradientButtons';
-type ButtonId = 'penalty' | 'available' | 'holding';
+import GradientButton from './GradientButtons';
+
+type ButtonId = 'penalty' | 'available' | 'borrowed';
+
 type BookCardProps = {
   isReturn: boolean;
   days: string;
@@ -11,7 +13,7 @@ type BookCardProps = {
   width: string;
   isadmin: boolean;
   isAdminLibrary?: boolean;
-  bookStatusId?:ButtonId
+  bookStatusId?: ButtonId;
 };
 
 const BookCard = ({
@@ -22,48 +24,26 @@ const BookCard = ({
   width,
   isadmin,
   isAdminLibrary = false,
-  bookStatusId="available"
+  bookStatusId = 'available', // Default value
 }: BookCardProps) => {
-  if(height=='56' && width=='40'){
-      return(
-        <View className={`h-56 w-40 m-2 overflow-hidden rounded-lg `}>    
-        {/* // <View className={`h-${height} w-${width} m-2 overflow-hidden rounded-lg `}> */}
-          <Image source={{ uri: imgUrl }} className="h-full w-full" resizeMode="cover" />
-          <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.9)']}
-            className="absolute flex h-full w-full justify-end p-4">
-            {isadmin ? (
-              isAdminLibrary ? (
-                <View className=" absolute bottom-0 right-0 m-2 rounded-lg">
-                  <Gradientbutton id={bookStatusId} />
-                </View>
-              ) : isReturn ? (
-                <Text className="text-xl text-white">returns in </Text>
-              ) : (
-                <Text className="text-xl text-white">available in</Text>
-              )
-            ) : isReturn ? (
-              <Text className="text-xl text-white">return in </Text>
-            ) : (
-              <Text className="text-xl text-white">available in</Text>
-            )}
-    {!isAdminLibrary &&         <Text className="text-2xl font-semibold text-white">{days}</Text>}
-    
-          </LinearGradient>
-        </View>
-      )
-  }
-  else if(height=='64' && width=='48'){
-    return ( 
-      <View className={`h-64 w-48 m-2 overflow-hidden rounded-lg `}>    
+  // Validate bookStatusId
+  const validStatuses: ButtonId[] = ['penalty', 'available', 'borrowed'];
+  const normalizedStatus: ButtonId = validStatuses.includes(bookStatusId)
+    ? bookStatusId
+    : 'available'; // Fallback to 'available' if invalid
+
+  if (height === '56' && width === '40') {
+    return (
+      <View className="h-56 w-40 m-2 overflow-hidden rounded-lg">
         <Image source={{ uri: imgUrl }} className="h-full w-full" resizeMode="cover" />
         <LinearGradient
           colors={['transparent', 'rgba(0,0,0,0.9)']}
-          className="absolute flex h-full w-full justify-end p-4">
+          className="absolute flex h-full w-full justify-end p-4"
+        >
           {isadmin ? (
             isAdminLibrary ? (
-              <View className=" absolute bottom-0 right-0 m-2 rounded-lg">
-                <Gradientbutton id={bookStatusId} />
+              <View className="absolute bottom-0 right-0 m-2 rounded-lg">
+                <GradientButton id={normalizedStatus} />
               </View>
             ) : isReturn ? (
               <Text className="text-xl text-white">returns in </Text>
@@ -75,12 +55,39 @@ const BookCard = ({
           ) : (
             <Text className="text-xl text-white">available in</Text>
           )}
-  {!isAdminLibrary &&         <Text className="text-2xl font-semibold text-white">{days}</Text>}
-  
+          {!isAdminLibrary && <Text className="text-2xl font-semibold text-white">{days}</Text>}
+        </LinearGradient>
+      </View>
+    );
+  } else if (height === '64' && width === '48') {
+    return (
+      <View className="h-64 w-48 m-2 overflow-hidden rounded-lg">
+        <Image source={{ uri: imgUrl }} className="h-full w-full" resizeMode="cover" />
+        <LinearGradient
+          colors={['transparent', 'rgba(0,0,0,0.9)']}
+          className="absolute flex h-full w-full justify-end p-4"
+        >
+          {isadmin ? (
+            isAdminLibrary ? (
+              <View className="absolute bottom-0 right-0 m-2 rounded-lg">
+                <GradientButton id={normalizedStatus} />
+              </View>
+            ) : isReturn ? (
+              <Text className="text-xl text-white">returns in </Text>
+            ) : (
+              <Text className="text-xl text-white">available in</Text>
+            )
+          ) : isReturn ? (
+            <Text className="text-xl text-white">return in </Text>
+          ) : (
+            <Text className="text-xl text-white">available in</Text>
+          )}
+          {!isAdminLibrary && <Text className="text-2xl font-semibold text-white">{days}</Text>}
         </LinearGradient>
       </View>
     );
   }
+  return null; // Fallback if height/width don't match
 };
 
 export default BookCard;

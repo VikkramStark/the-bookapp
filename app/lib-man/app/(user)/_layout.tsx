@@ -1,20 +1,22 @@
 import { Tabs, router } from 'expo-router';
 import { useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../utils/firebase';
+import { useAuth } from '../../hooks/useAuth';
+import { ROUTES } from '../../constants/routes';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'react-native';
 
 export default function UserLayout() {
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.replace('/(auth)/login'); // Redirect to login if not authenticated
-      }
-    });
+  const { user, loading } = useAuth();
 
-    return () => unsubscribe();
-  }, []);
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace(ROUTES.LOGIN);
+    }
+  }, [user, loading]);
+
+  if (loading) {
+    return null; // Optionally show a loading indicator
+  }
 
   return (
     <Tabs
