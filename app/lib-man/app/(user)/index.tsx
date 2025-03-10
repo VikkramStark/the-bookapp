@@ -15,7 +15,6 @@ const Home = () => {
   const [borrowedCount, setBorrowedCount] = useState(0);
   const [penaltyFee, setPenaltyFee] = useState(0);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
@@ -58,8 +57,9 @@ const Home = () => {
             />
           )}
         </View>
+
         <HomeInfoCard
-          name="Vaishnavi" // Replace with user.displayName if available=
+          name={user?.displayName || user?.email?.split('@')[0] || 'User'} 
           card1text={`Books\nborrowed`}
           card1no={borrowedCount.toString()}
           card2no={penaltyFee.toString()}

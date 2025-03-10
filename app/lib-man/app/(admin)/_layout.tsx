@@ -10,17 +10,15 @@ export default function AdminLayout() {
   const { user, role, loading } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.replace(ROUTES.LOGIN);
-      } else if (role !== 'admin') {
-        router.replace(ROUTES.USER_HOME);
-      }
+    if (!loading && user && role !== 'admin') {
+      router.replace(ROUTES.USER_HOME);
+    } else if (!loading && !user) {
+      router.replace(ROUTES.LOGIN);
     }
   }, [user, role, loading]);
 
   if (loading) {
-    return null; // Optionally show a loading indicator
+    return null; 
   }
 
   return (

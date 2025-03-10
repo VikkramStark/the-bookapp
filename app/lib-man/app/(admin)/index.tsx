@@ -63,7 +63,6 @@ const Home = () => {
 
           <View className="my-4 flex flex-row items-center justify-center gap-2 px-4">
             <Skeleton width={160} height={176} colorMode={skeletonColor} />
-
             <Skeleton width={176} height={176} colorMode={skeletonColor} />
           </View>
         </View>
@@ -100,8 +99,9 @@ const Home = () => {
         isAdmin={true}
       />
       {/* Uncomment if needed */}
-      <HomeScroll title="Owned books" goto="/(admin)/add-books" isBorrowed={true} isAdmin={true} />
-      <HomeScroll title="Wishlist" goto="/(admin)/library" isBorrowed={false} isAdmin={true} />
+      <HomeScroll title="Available books" goto="/(admin)/library" isBorrowed={false} isAdmin={true} />
+      <HomeScroll title="Borrowed books" goto="/(admin)/library" isBorrowed={true} isAdmin={true} />
+      
     </ScrollView>
   );
 };

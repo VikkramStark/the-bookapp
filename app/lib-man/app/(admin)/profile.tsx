@@ -1,18 +1,23 @@
 import { View, Text, Switch, Image, Pressable, ActivityIndicator } from 'react-native';
 import React from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
 import { useTheme } from '../../ThemeContext';
 
 const ProfileScreen = () => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
+  const [isEnabled, setIsEnabled] = useState(theme === 'dark'); 
+  const toggleSwitch = () => {
+    setIsEnabled((prev) => !prev);
+    toggleTheme();
+  };
+  useEffect(() => {
+    setIsEnabled(theme === 'dark');
+  }, [theme]);
   const headingColor = theme === 'light' ? 'black' : 'white';
-  const { toggleTheme } = useTheme();
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => {setIsEnabled(!isEnabled);toggleTheme()}
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
   const handleLogout = () => {
     setLoading(true);

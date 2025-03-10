@@ -8,14 +8,10 @@ export default function AuthLayout() {
 
   useEffect(() => {
     if (!loading && user) {
-      if (role === 'admin') {
-        router.replace(ROUTES.ADMIN_HOME); 
-      } else {
-        router.replace(ROUTES.USER_BOOKS); 
-      }
+      router.replace(role === 'admin' ? ROUTES.ADMIN_HOME : ROUTES.USER_HOME);
     }
   }, [user, role, loading]);
-
+  
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="login" options={{ headerShown: false }} />

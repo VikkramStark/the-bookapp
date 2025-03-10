@@ -6,7 +6,7 @@ import GradientButton from './GradientButtons';
 type ButtonId = 'penalty' | 'available' | 'borrowed';
 
 type BookCardProps = {
-  isReturn: boolean;
+  isReturn?: boolean;
   days: string;
   imgUrl: string;
   height: string;

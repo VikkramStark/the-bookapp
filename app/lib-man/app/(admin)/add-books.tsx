@@ -7,6 +7,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useTheme } from '../../ThemeContext';
+import app from '../../utils/firebase';
 const AddBooks = () => {
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
@@ -24,8 +25,8 @@ const AddBooks = () => {
   const [loading, setLoading] = useState(false);
 
   const pickImageAsync = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
     });
@@ -141,31 +142,31 @@ const AddBooks = () => {
           </Pressable>
           <View className="flex-1 flex-col gap-3">
             <TextInput
-              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
               placeholder="ISBN"
               value={isbn}
               onChangeText={setIsbn}
             />
             <TextInput
-              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
               placeholder="Title"
               value={title}
               onChangeText={setTitle}
             />
             <TextInput
-              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
               placeholder="Author"
               value={author}
               onChangeText={setAuthor}
             />
             <TextInput
-              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
               placeholder="Category"
               value={category}
               onChangeText={setCategory}
             />
             <TextInput
-              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
               placeholder="Edition"
               value={edition}
               onChangeText={setEdition}
@@ -174,7 +175,7 @@ const AddBooks = () => {
         </View>
         <View className="mt-4 flex-col gap-3 ">
           <TextInput
-className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
 
             placeholder="Description"
             value={description}
@@ -183,26 +184,26 @@ className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white plac
             numberOfLines={4}
           />
           <TextInput
-            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
             placeholder="Publisher"
             value={publisher}
             onChangeText={setPublisher}
           />
           <TextInput
-            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
             placeholder="Language"
             value={language}
             onChangeText={setLanguage}
           />
           <TextInput
-            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
             placeholder="Quantity"
             value={quantity}
             onChangeText={setQuantity}
             keyboardType="numeric"
           />
           <TextInput
-            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
             placeholder="Max borrow days"
             value={maxBorrowDays}
             onChangeText={setMaxBorrowDays}

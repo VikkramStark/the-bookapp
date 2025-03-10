@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import GradientButton from '../../components/ui/GradientButtons';
 import { db } from '../../utils/firebase';
-import { collection, query, where, getDocs, doc, updateDoc, arrayUnion ,getDoc,Timestamp} from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, getDoc, Timestamp } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
 
 type Request = {
@@ -24,7 +24,7 @@ const DetailsRow = ({ label, value }: { label: string; value: string }) => {
   return (
     <View>
       <Text className="text-xs text-neutral-500">{label}</Text>
-      <Text className="text-xl font-semibold"style={{ color: headingColor }}>{value}</Text>
+      <Text className="text-xl font-semibold" style={{ color: headingColor }}>{value}</Text>
     </View>
   );
 };
@@ -34,7 +34,7 @@ const Inbox = () => {
   const headingColor = theme === 'light' ? 'black' : 'white';
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchRequests = async () => {
       setLoading(true);
@@ -48,16 +48,17 @@ const Inbox = () => {
         // Fetch book images for each request
         const requestsData = await Promise.all(
           requestsSnapshot.docs.map(async (requestDoc) => {
-            const bookDoc = await getDoc(doc(db, 'books', requestDoc.data().bookId));
+            const requestData = requestDoc.data();
+            const bookDoc = await getDoc(doc(db, 'books', requestData.bookId));
             return {
               id: requestDoc.id,
-              bookId: requestDoc.data().bookId,
-              userId: requestDoc.data().userId,
-              isbn: requestDoc.data().isbn,
-              title: requestDoc.data().title,
-              author: requestDoc.data().author,
-              borrowDays: requestDoc.data().borrowDays,
-              status: requestDoc.data().status,
+              bookId: requestData.bookId,
+              userId: requestData.userId,
+              isbn: requestData.isbn,
+              title: requestData.title,
+              author: requestData.author,
+              borrowDays: requestData.borrowDays,
+              status: requestData.status,
               imgUrl: bookDoc.exists() ? bookDoc.data().imgUrl : '',
             };
           })
@@ -76,11 +77,14 @@ const Inbox = () => {
 
   const handleAccept = async (request: Request) => {
     try {
+      console.log('Accepting request:', request.id);
+  
       // Update the request status
       await updateDoc(doc(db, 'requests', request.id), {
         status: 'accepted',
       });
-
+      console.log('Request status updated to accepted.');
+  
       // Update the book status and borrower
       await updateDoc(doc(db, 'books', request.bookId), {
         status: 'borrowed',
@@ -88,12 +92,14 @@ const Inbox = () => {
         borrowedAt: Timestamp.now(),
         returnDays: request.borrowDays,
       });
-
+      console.log('Book status updated to borrowed.');
+  
       // Add the book to the user's borrowedBooks
       await updateDoc(doc(db, 'users', request.userId), {
         borrowedBooks: arrayUnion(request.bookId),
       });
-
+      console.log('Book added to user\'s borrowedBooks.');
+  
       // Remove the request from the list
       setRequests((prev) => prev.filter((req) => req.id !== request.id));
     } catch (error) {
@@ -101,19 +107,23 @@ const Inbox = () => {
       alert('Failed to accept request.');
     }
   };
-
+  
   const handleDecline = async (request: Request) => {
     try {
+      console.log('Declining request:', request.id);
+  
       await updateDoc(doc(db, 'requests', request.id), {
         status: 'declined',
       });
-
+      console.log('Request status updated to declined.');
+  
       setRequests((prev) => prev.filter((req) => req.id !== request.id));
     } catch (error) {
       console.error('Error declining request:', error);
       alert('Failed to decline request.');
     }
   };
+  
 
   if (loading) {
     return <ActivityIndicator size="large" className="mt-4" />;
@@ -122,60 +132,60 @@ const Inbox = () => {
   return (
     <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className="flex h-16 w-full items-center justify-center py-2">
-                {theme === 'dark' ? (
-                  <Image
-                    source={require('../../assets/logo-white-side.png')}
-                    className="h-full w-auto"
-                    resizeMode="contain"
-                  />
-                ) : (
-                  <Image
-                    source={require('../../assets/logo-black-side.png')}
-                    className="h-full w-auto"
-                    resizeMode="contain"
-                  />
-                )}
-              </View>
+        {theme === 'dark' ? (
+          <Image
+            source={require('../../assets/logo-white-side.png')}
+            className="h-full w-auto"
+            resizeMode="contain"
+          />
+        ) : (
+          <Image
+            source={require('../../assets/logo-black-side.png')}
+            className="h-full w-auto"
+            resizeMode="contain"
+          />
+        )}
+      </View>
       
-    <View className="mt-4 flex flex-1 px-2">
-      <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Inbox</Text>
-      {requests.length === 0 ? (
-        <View className='flex h-80 justify-center items-center w-full'>
-          <Image source={require('../../assets/request.png')} className="h-full w-auto"
-                    resizeMode="contain"/>
-          <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>No pending requests.</Text>
-        </View>
-      ) : (
-        <FlashList
-          estimatedItemSize={4}
-          showsVerticalScrollIndicator={false}
-          data={requests}
-          renderItem={({ item }) => (
-            <View className="flex h-max flex-row gap-4 mt-4">
-              <Image
-                source={{ uri: item.imgUrl }}
-                className="h-full w-48 rounded-lg"
-                resizeMode="cover"
-              />
-              <View className="flex">
-                <DetailsRow label="ISBN" value={item.isbn} />
-                <DetailsRow label="Title" value={item.title} />
-                <DetailsRow label="Author" value={item.author} />
-                <DetailsRow label="Borrow days" value={item.borrowDays.toString()} />
-                <View className="flex flex-row gap-2">
-                  <Pressable onPress={() => handleAccept(item)}>
-                    <GradientButton id="Accept" />
-                  </Pressable>
-                  <Pressable onPress={() => handleDecline(item)}>
-                    <GradientButton id="Decline" />
-                  </Pressable>
+      <View className="mt-4 flex flex-1 px-2">
+        <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Inbox</Text>
+        {requests.length === 0 ? (
+          <View className='flex h-80 justify-center items-center w-full'>
+            <Image 
+              source={require('../../assets/request.png')} 
+              className="h-full w-auto"
+              resizeMode="contain"
+            />
+            <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>No pending requests.</Text>
+          </View>
+        ) : (
+          <FlashList
+            estimatedItemSize={4}
+            showsVerticalScrollIndicator={false}
+            data={requests}
+            renderItem={({ item }) => (
+              <View className="flex h-max flex-row gap-4 mt-4">
+                <Image
+                  source={{ uri: item.imgUrl }}
+                  className="h-full w-48 rounded-lg"
+                  resizeMode="cover"
+                />
+                <View className="flex">
+                  <DetailsRow label="ISBN" value={item.isbn} />
+                  <DetailsRow label="Title" value={item.title} />
+                  <DetailsRow label="Author" value={item.author} />
+                  <DetailsRow label="Borrow days" value={item.borrowDays.toString()} />
+                  <View className="flex flex-row gap-2 mt-2">
+                      <GradientButton id="Accept" onPress={() => handleAccept(item)}/>
+                      <GradientButton id="Decline" onPress={() => handleDecline(item)} />
+                    
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        />
-      )}
-    </View>
+            )}
+          />
+        )}
+      </View>
     </View>
   );
 };

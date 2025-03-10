@@ -3,7 +3,7 @@ import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../../constants/colors';
 
-type ButtonId = 'penalty' | 'available' | 'borrowed' | 'Accept' | 'Decline';
+type ButtonId = 'penalty' | 'available' | 'borrowed' | 'Accept' | 'Decline'|'Return'|'Borrow';
 
 type GradientButtonProps = {
   id: ButtonId;
@@ -31,6 +31,15 @@ const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, strin
     colours: [COLORS.red[300], COLORS.red[400], COLORS.red[600]],
     text: 'Decline',
   },
+  Return: {
+    colours: [COLORS.green[300], COLORS.green[400], COLORS.green[600]],
+    text: 'Return',
+  },
+  Borrow: {
+    colours: ['#808080','#0e0e0e','#000000'],
+    text: 'Borrow',
+  },
+
 };
 
 const defaultButtonData = {
