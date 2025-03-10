@@ -140,7 +140,11 @@ const Inbox = () => {
     <View className="mt-4 flex flex-1 px-2">
       <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Inbox</Text>
       {requests.length === 0 ? (
-        <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>No pending requests.</Text>
+        <View className='flex h-80 justify-center items-center w-full'>
+          <Image source={require('../../assets/request.png')} className="h-full w-auto"
+                    resizeMode="contain"/>
+          <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>No pending requests.</Text>
+        </View>
       ) : (
         <FlashList
           estimatedItemSize={4}

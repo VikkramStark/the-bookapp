@@ -5,7 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useAuth } from '../../hooks/useAuth';
 import { db } from '../../utils/firebase';
 import { useTheme } from '../../ThemeContext';
-
+import { Skeleton } from 'moti/skeleton';
 import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, setDoc,getDoc, Timestamp,arrayRemove } from 'firebase/firestore';
 
 type Book = {
@@ -113,7 +113,38 @@ const Explore = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" className="mt-4" />;
+    // return <ActivityIndicator size="large" className="mt-4" />;
+    return (
+          <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
+            <View className="flex h-16 w-full items-center justify-center py-2 mx-2">
+              {theme === 'dark' ? (
+                <Image
+                  source={require('../../assets/logo-white-side.png')}
+                  className="h-full w-auto"
+                  resizeMode="contain"
+                />
+              ) : (
+                <Image
+                  source={require('../../assets/logo-black-side.png')}
+                  className="h-full w-auto"
+                  resizeMode="contain"
+                />
+              )}
+            </View>
+            <Text className="px-2 text-2xl font-bold mx-2 " style={{ color: headingColor }}>
+            Available books
+            </Text>
+            {theme === 'dark'?(
+              <View className=" flex-1 flex-row gap-4 mx-2 justify-center mt-2">
+              <Skeleton show={loading} colorMode="light" height={224} width={176} />
+              <Skeleton show={loading} colorMode="light" height={224} width={176} />
+            </View>):(<View className=" flex-1 flex-row gap-4 mx-2 justify-center mt-2">
+              <Skeleton show={loading} colorMode="dark" height={224} width={176} />
+              <Skeleton show={loading} colorMode="dark" height={224} width={176} />
+            </View>)}
+            
+          </View>
+        );
   }
 
   return (

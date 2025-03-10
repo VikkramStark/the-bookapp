@@ -1,9 +1,4 @@
-Put Your App Files Here
 
-/* create-react-app app */
-
-app
-  |----src
-  |----App.jsx 
-  |----package.json
-  |---- (Whatever)
+cd lib-man
+bun install
+bunx expo start

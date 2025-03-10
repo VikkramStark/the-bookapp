@@ -8,7 +8,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
 import { useRouter } from 'expo-router';
-
+import { Skeleton } from 'moti/skeleton';
 type Book = {
   id: string;
   imgUrl: string;
@@ -62,7 +62,37 @@ const Wishlist = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" className="mt-4" />;
+    // return <ActivityIndicator size="large" className="mt-4" />;
+    return (
+      <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
+        <View className="flex h-16 w-full items-center justify-center py-2 mx-2">
+          {theme === 'dark' ? (
+            <Image
+              source={require('../../assets/logo-white-side.png')}
+              className="h-full w-auto"
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={require('../../assets/logo-black-side.png')}
+              className="h-full w-auto"
+              resizeMode="contain"
+            />
+          )}
+        </View>
+        <Text className="px-2 text-2xl font-bold " style={{ color: headingColor }}>
+        Wishlist
+        </Text>
+        {theme === 'dark'?(<View className="flex-1 flex-row justify-center gap-2">
+          <Skeleton show={loading} colorMode="light" height={256} width={176} />
+          <Skeleton show={loading} colorMode="light" height={256} width={176} />
+        </View>):(<View className=" flex-1 flex-row justify-center gap-2">
+          <Skeleton show={loading} colorMode="dark" height={256} width={176} />
+          <Skeleton show={loading} colorMode="dark" height={256} width={176} />
+        </View>)}
+        
+      </View>
+    );
   }
 
   return (
