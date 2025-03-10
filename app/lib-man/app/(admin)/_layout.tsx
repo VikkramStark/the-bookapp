@@ -18,7 +18,7 @@ export default function AdminLayout() {
   }, [user, role, loading]);
 
   if (loading) {
-    return null; 
+    return null;
   }
 
   return (
@@ -26,8 +26,7 @@ export default function AdminLayout() {
       screenOptions={{
         tabBarActiveTintColor: 'black',
         headerShown: false,
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
@@ -61,12 +60,16 @@ export default function AdminLayout() {
           tabBarIcon: ({ color }) => <FontAwesome6 name="inbox" size={24} color={color} />,
         }}
       />
-            <Tabs.Screen
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'profile',
           headerShown: false,
-          tabBarIcon: ({ color }) => <View className='h-6 w-6 rounded-full bg-gray-700 relative items-center justify-center'><Text className='absolute font-bold text-white'>A</Text></View>,
+          tabBarIcon: ({ color }) => (
+            <View className="relative h-6 w-6 items-center justify-center rounded-full bg-gray-700">
+              <Text className="absolute font-bold text-white">A</Text>
+            </View>
+          ),
         }}
       />
     </Tabs>

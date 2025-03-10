@@ -21,7 +21,6 @@ type Book = {
   description: string;
   publisher: string;
   language: string;
-  quantity: number;
   maxBorrowDays: number;
   borrowedBy?: string | null; // User ID of borrower
   borrowedAt?: any | null; // Timestamp
@@ -62,7 +61,7 @@ const Library = () => {
             description: doc.data().description || 'No description available',
             publisher: doc.data().publisher || 'N/A',
             language: doc.data().language || 'N/A',
-            quantity: doc.data().quantity || 1,
+      
             maxBorrowDays: doc.data().maxBorrowDays || 14,
             borrowedBy: doc.data().borrowedBy || null,
             borrowedAt: doc.data().borrowedAt || null,
@@ -131,6 +130,8 @@ const Library = () => {
 
   return (
     <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+      <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+
       <View className="flex h-16 w-full items-center justify-center py-2">
         {theme === 'dark' ? (
           <Image
@@ -178,6 +179,7 @@ const Library = () => {
           />
         )}
       </View>
+      </View>
 
       {/* Bottom Sheet */}
       <BottomSheet
@@ -191,7 +193,7 @@ const Library = () => {
       >
         <BottomSheetView style={{ flex: 1, padding: 16 }}>
           {selectedBook ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
               <Image
                 source={{ uri: selectedBook.imgUrl }}
                 className="h-48 w-32 self-center rounded-lg"
@@ -231,9 +233,7 @@ const Library = () => {
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
                   Language: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.language}</Text>
                 </Text>
-                <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Quantity: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.quantity}</Text>
-                </Text>
+                
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
                   Max Borrow Days: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.maxBorrowDays}</Text>
                 </Text>

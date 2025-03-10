@@ -20,7 +20,6 @@ const AddBooks = () => {
   const [description, setDescription] = useState('');
   const [publisher, setPublisher] = useState('');
   const [language, setLanguage] = useState('');
-  const [quantity, setQuantity] = useState('');
   const [maxBorrowDays, setMaxBorrowDays] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +48,6 @@ const AddBooks = () => {
       !description ||
       !publisher ||
       !language ||
-      !quantity ||
       !maxBorrowDays ||
       !image
     ) {
@@ -58,10 +56,9 @@ const AddBooks = () => {
     }
 
     // Validate quantity and maxBorrowDays as positive numbers
-    const quantityNum = parseInt(quantity, 10);
     const maxBorrowDaysNum = parseInt(maxBorrowDays, 10);
-    if (isNaN(quantityNum) || isNaN(maxBorrowDaysNum) || quantityNum <= 0 || maxBorrowDaysNum <= 0) {
-      alert('Quantity and Max borrow days must be positive numbers.');
+    if ( isNaN(maxBorrowDaysNum) || maxBorrowDaysNum <= 0) {
+      alert('Max borrow days must be positive numbers.');
       return;
     }
 
@@ -76,7 +73,6 @@ const AddBooks = () => {
         description,
         publisher,
         language,
-        quantity: quantityNum,
         maxBorrowDays: maxBorrowDaysNum,
         imgUrl: image, // TODO: Replace with Firebase Storage URL
         status: 'available',
@@ -95,7 +91,6 @@ const AddBooks = () => {
       setDescription('');
       setPublisher('');
       setLanguage('');
-      setQuantity('');
       setMaxBorrowDays('');
       setImage(null);
     } catch (error) {
@@ -195,13 +190,7 @@ className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white plac
             value={language}
             onChangeText={setLanguage}
           />
-          <TextInput
-            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
-            placeholder="Quantity"
-            value={quantity}
-            onChangeText={setQuantity}
-            keyboardType="numeric"
-          />
+
           <TextInput
             className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500 text-white' : 'border-black'}`}
             placeholder="Max borrow days"
