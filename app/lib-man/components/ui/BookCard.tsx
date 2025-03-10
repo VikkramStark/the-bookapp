@@ -6,7 +6,7 @@ import GradientButton from './GradientButtons';
 type ButtonId = 'penalty' | 'available' | 'borrowed';
 
 type BookCardProps = {
-  isReturn?: boolean;
+  isReturn: boolean;
   days: string;
   imgUrl: string;
   height: string;
@@ -14,7 +14,7 @@ type BookCardProps = {
   isadmin: boolean;
   isAdminLibrary?: boolean;
   bookStatusId?: ButtonId;
-  onAvailablePress?: () => void; // Add prop for button click
+  onAvailablePress?: () => void;
 };
 
 const BookCard = ({
@@ -26,7 +26,7 @@ const BookCard = ({
   isadmin,
   isAdminLibrary = false,
   bookStatusId = 'available',
-  onAvailablePress, // Destructure new prop
+  onAvailablePress,
 }: BookCardProps) => {
   const validStatuses: ButtonId[] = ['penalty', 'available', 'borrowed'];
   const normalizedStatus: ButtonId = validStatuses.includes(bookStatusId)
@@ -42,26 +42,35 @@ const BookCard = ({
           className="absolute flex h-full w-full justify-end p-4"
         >
           {isadmin ? (
-            isAdminLibrary ? (
+            isAdminLibrary || (!isReturn && normalizedStatus === 'available') ? (
               <View className="absolute bottom-0 right-0 m-2 rounded-lg">
                 <GradientButton id={normalizedStatus} />
               </View>
             ) : isReturn ? (
-              <Text className="text-xl text-white">returns in </Text>
+              <View className="flex flex-col items-end">
+                <Text className="text-xl text-white">returns in</Text>
+                <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+              </View>
             ) : (
-              <Text className="text-xl text-white">available in</Text>
+              <View className="flex flex-col items-end">
+                <Text className="text-xl text-white">available in</Text>
+                <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+              </View>
             )
           ) : days === '0' ? (
             <View className="absolute bottom-0 right-0 m-2 rounded-lg">
               <GradientButton id="available" onPress={onAvailablePress} />
             </View>
           ) : isReturn ? (
-            <Text className="text-xl text-white">return in </Text>
+            <View className="flex flex-col items-end">
+              <Text className="text-xl text-white">return in</Text>
+              <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+            </View>
           ) : (
-            <Text className="text-xl text-white">available in</Text>
-          )}
-          {!isAdminLibrary && days !== '0' && (
-            <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+            <View className="flex flex-col items-end">
+              <Text className="text-xl text-white">available in</Text>
+              <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+            </View>
           )}
         </LinearGradient>
       </View>
@@ -75,26 +84,35 @@ const BookCard = ({
           className="absolute flex h-full w-full justify-end p-4"
         >
           {isadmin ? (
-            isAdminLibrary ? (
+            isAdminLibrary || (!isReturn && normalizedStatus === 'available') ? (
               <View className="absolute bottom-0 right-0 m-2 rounded-lg">
                 <GradientButton id={normalizedStatus} />
               </View>
             ) : isReturn ? (
-              <Text className="text-xl text-white">returns in </Text>
+              <View className="flex flex-col items-end">
+                <Text className="text-xl text-white">returns in</Text>
+                <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+              </View>
             ) : (
-              <Text className="text-xl text-white">available in</Text>
+              <View className="flex flex-col items-end">
+                <Text className="text-xl text-white">available in</Text>
+                <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+              </View>
             )
           ) : days === '0' ? (
             <View className="absolute bottom-0 right-0 m-2 rounded-lg">
               <GradientButton id="available" onPress={onAvailablePress} />
             </View>
           ) : isReturn ? (
-            <Text className="text-xl text-white">return in </Text>
+            <View className="flex flex-col items-end">
+              <Text className="text-xl text-white">return in</Text>
+              <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+            </View>
           ) : (
-            <Text className="text-xl text-white">available in</Text>
-          )}
-          {!isAdminLibrary && days !== '0' && (
-            <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+            <View className="flex flex-col items-end">
+              <Text className="text-xl text-white">available in</Text>
+              <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+            </View>
           )}
         </LinearGradient>
       </View>

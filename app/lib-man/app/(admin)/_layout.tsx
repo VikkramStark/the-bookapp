@@ -50,6 +50,7 @@ export default function AdminLayout() {
           title: '',
           headerShown: false,
           tabBarIcon: ({ color }) => <Ionicons name="add-circle" size={24} color={color} />,
+          tabBarStyle: { display: 'none' },
         }}
       />
       <Tabs.Screen

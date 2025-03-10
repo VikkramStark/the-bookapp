@@ -105,6 +105,7 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: HomeScr
             height="56"
             width="40"
             isadmin={isAdmin}
+            
           />
         )}
       />
