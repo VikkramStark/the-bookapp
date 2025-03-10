@@ -7,7 +7,7 @@ import { db } from '../../utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-
+import { useTheme } from '../../ThemeContext';
 type HomeScrollProps = {
   title: string;
   goto: Href;
@@ -25,7 +25,8 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: HomeScr
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   useEffect(() => {
     const fetchBooks = async () => {
       setLoading(true);
@@ -81,33 +82,34 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: HomeScr
   }
 
   return (
-    <View className="mb-4">
-      <View className="flex flex-row justify-between px-6">
-        <Text className="text-xl font-semibold">{title}</Text>
-        <Link href={goto} className="pl-4 text-neutral-600">
-          view all
-        </Link>
-      </View>
-      {books.length === 0 ? (
-        <Text className="mt-4 text-center text-lg">No books to display.</Text>
-      ) : (
-        <FlashList
-          data={books}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          estimatedItemSize={5}
-          renderItem={({ item }) => (
-            <BookCard
-              days={item.returnDays.toString()}
-              isReturn={isBorrowed}
-              imgUrl={item.imgUrl}
-              height="56"
-              width="40"
-              isadmin={isAdmin}
-            />
-          )}
-        />
-      )}
+    <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}><View className="mb-4">
+    <View className="flex flex-row justify-between px-2">
+      <Text className="text-xl font-semibold" style={{ color: headingColor }}>{title}</Text>
+      <Link href={goto} className="pl-4 text-neutral-600">
+        view all
+      </Link>
     </View>
+    {books.length === 0 ? (
+      <Text className="mt-4 text-center text-lg">No books to display.</Text>
+    ) : (
+      <FlashList
+        data={books}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        estimatedItemSize={5}
+        renderItem={({ item }) => (
+          <BookCard
+            days={item.returnDays.toString()}
+            isReturn={isBorrowed}
+            imgUrl={item.imgUrl}
+            height="56"
+            width="40"
+            isadmin={isAdmin}
+          />
+        )}
+      />
+    )}
+  </View></View>
+    
   );
 }

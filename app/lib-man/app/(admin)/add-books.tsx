@@ -6,8 +6,10 @@ import { db } from '../../utils/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { ScrollView } from 'react-native';
 import { router } from 'expo-router';
-
+import { useTheme } from '../../ThemeContext';
 const AddBooks = () => {
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   const [image, setImage] = useState<string | null>(null);
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
@@ -104,16 +106,16 @@ const AddBooks = () => {
   };
 
   return (
-    <KeyboardAvoidingView className="mx-2 flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+    <KeyboardAvoidingView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView className="flex-1 mx-2 " showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => router.back()} className="mb-4 mt-2 flex flex-row items-center">
-          <Ionicons name="chevron-back" size={24} color="black" />
-          <Text className="px-2 text-xl font-semibold">Back</Text>
+          <Ionicons name="chevron-back" size={24}  style={{ color: headingColor }} />
+          <Text className="px-2 text-xl font-semibold" style={{ color: headingColor }}>Back</Text>
         </Pressable>
-        <Text className="px-2 text-2xl font-bold">Add Book</Text>
+        <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Add Book</Text>
         <View className="flex flex-row gap-2 mt-4">
           <Pressable onPress={pickImageAsync} className="flex-1">
-            <View className="h-60 w-48 rounded-lg bg-gray-400 flex justify-center items-center">
+            <View className="h-64 w-48 rounded-lg bg-gray-400 flex justify-center items-center">
               {image ? (
                 <Image source={{ uri: image }} className="h-full w-full rounded-lg" resizeMode="cover" />
               ) : (
@@ -121,42 +123,43 @@ const AddBooks = () => {
               )}
             </View>
           </Pressable>
-          <View className="flex-1 flex-col gap-2">
+          <View className="flex-1 flex-col gap-3">
             <TextInput
-              className="border-2 border-black rounded-md p-2"
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
               placeholder="ISBN"
               value={isbn}
               onChangeText={setIsbn}
             />
             <TextInput
-              className="border-2 border-black rounded-md p-2"
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
               placeholder="Title"
               value={title}
               onChangeText={setTitle}
             />
             <TextInput
-              className="border-2 border-black rounded-md p-2"
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
               placeholder="Author"
               value={author}
               onChangeText={setAuthor}
             />
             <TextInput
-              className="border-2 border-black rounded-md p-2"
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
               placeholder="Category"
               value={category}
               onChangeText={setCategory}
             />
             <TextInput
-              className="border-2 border-black rounded-md p-2"
+              className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
               placeholder="Edition"
               value={edition}
               onChangeText={setEdition}
             />
           </View>
         </View>
-        <View className="mt-4 flex-col gap-2 ">
+        <View className="mt-4 flex-col gap-3 ">
           <TextInput
-            className="h-24 border-2 border-black rounded-md p-2"
+className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
+
             placeholder="Description"
             value={description}
             onChangeText={setDescription}
@@ -164,26 +167,26 @@ const AddBooks = () => {
             numberOfLines={4}
           />
           <TextInput
-            className="border-2 border-black rounded-md p-2"
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
             placeholder="Publisher"
             value={publisher}
             onChangeText={setPublisher}
           />
           <TextInput
-            className="border-2 border-black rounded-md p-2"
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
             placeholder="Language"
             value={language}
             onChangeText={setLanguage}
           />
           <TextInput
-            className="border-2 border-black rounded-md p-2"
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
             placeholder="Quantity"
             value={quantity}
             onChangeText={setQuantity}
             keyboardType="numeric"
           />
           <TextInput
-            className="border-2 border-black rounded-md p-2"
+            className={`border-2  rounded-md p-2 ${theme === 'dark' ? 'border-white placeholder:text-gray-500' : 'border-black'}`}
             placeholder="Max borrow days"
             value={maxBorrowDays}
             onChangeText={setMaxBorrowDays}

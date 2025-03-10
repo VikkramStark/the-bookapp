@@ -4,7 +4,7 @@ import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
 import { db } from '../../utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-
+import { useTheme } from '../../ThemeContext';
 type Book = {
   id: string;
   imgUrl: string;
@@ -14,7 +14,8 @@ type Book = {
 const Library = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   useEffect(() => {
     const fetchBooks = async () => {
       setLoading(true);
@@ -52,8 +53,10 @@ const Library = () => {
   }
 
   return (
+    <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+
     <View className="mt-4 flex flex-1 px-2">
-      <Text className="px-2 text-2xl font-bold">All books</Text>
+      <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>All books</Text>
       {books.length === 0 ? (
         <Text className="mt-4 text-center text-lg">No books in the library.</Text>
       ) : (
@@ -76,6 +79,7 @@ const Library = () => {
           )}
         />
       )}
+    </View>
     </View>
   );
 };

@@ -44,6 +44,7 @@ const Home = () => {
         card1no={borrowedCount.toString()}
         card2no={penaltyFee.toString()}
         card2text={`Penalty\nfee`}
+        isAdmin={false}
       />
       <HomeScroll title="Owned books" goto="/(user)/books" isBorrowed={true} isAdmin={false} />
       <HomeScroll title="Wishlist" goto="/(user)/wishlist" isBorrowed={false} isAdmin={false} />

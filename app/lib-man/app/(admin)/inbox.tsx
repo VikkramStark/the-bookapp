@@ -4,6 +4,7 @@ import { FlashList } from '@shopify/flash-list';
 import GradientButton from '../../components/ui/GradientButtons';
 import { db } from '../../utils/firebase';
 import { collection, query, where, getDocs, doc, updateDoc, arrayUnion ,getDoc,Timestamp} from 'firebase/firestore';
+import { useTheme } from '../../ThemeContext';
 
 type Request = {
   id: string;
@@ -18,15 +19,19 @@ type Request = {
 };
 
 const DetailsRow = ({ label, value }: { label: string; value: string }) => {
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   return (
     <View>
       <Text className="text-xs text-neutral-500">{label}</Text>
-      <Text className="text-xl font-semibold text-black">{value}</Text>
+      <Text className="text-xl font-semibold"style={{ color: headingColor }}>{value}</Text>
     </View>
   );
 };
 
 const Inbox = () => {
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -115,10 +120,11 @@ const Inbox = () => {
   }
 
   return (
+    <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <View className="mt-4 flex flex-1 px-2">
-      <Text className="px-2 text-2xl font-bold">Inbox</Text>
+      <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Inbox</Text>
       {requests.length === 0 ? (
-        <Text className="mt-4 text-center text-lg">No pending requests.</Text>
+        <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>No pending requests.</Text>
       ) : (
         <FlashList
           estimatedItemSize={4}
@@ -149,6 +155,7 @@ const Inbox = () => {
           )}
         />
       )}
+    </View>
     </View>
   );
 };

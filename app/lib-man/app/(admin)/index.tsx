@@ -4,8 +4,10 @@ import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
 import { db } from '../../utils/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-
+import { useTheme } from '../../ThemeContext';
 const Home = () => {
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   const [availableCount, setAvailableCount] = useState(0);
   const [borrowedCount, setBorrowedCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -37,17 +39,18 @@ const Home = () => {
   }
 
   return (
-    <ScrollView className="">
+    <ScrollView className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <HomeInfoCard
         name="Admin"
         card1text={`Books\navailable`}
         card1no={availableCount.toString()}
         card2no={borrowedCount.toString()}
         card2text={`Books\nborrowed`}
+        isAdmin={true}
       />
       {/* Uncomment if needed */}
-      {/* <HomeScroll title="Owned books" goto="/(admin)/add-books" isBorrowed={true} isAdmin={true} />
-      <HomeScroll title="Wishlist" goto="/(admin)/library" isBorrowed={false} isAdmin={true} /> */}
+      <HomeScroll title="Owned books" goto="/(admin)/add-books" isBorrowed={true} isAdmin={true} />
+      <HomeScroll title="Wishlist" goto="/(admin)/library" isBorrowed={false} isAdmin={true} />
     </ScrollView>
   );
 };
