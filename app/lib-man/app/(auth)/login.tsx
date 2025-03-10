@@ -69,7 +69,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView className="mx-4 flex flex-1 justify-center gap-6" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <KeyboardAvoidingView  className="mx-4 flex flex-1 justify-center gap-6" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Image
         source={require('../../assets/logo-black-updown.png')}
         className="flex h-64 w-52 self-center object-cover object-center"

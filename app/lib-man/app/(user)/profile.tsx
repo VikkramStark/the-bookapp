@@ -4,10 +4,17 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
+import { useTheme } from '../../ThemeContext';
 
 const ProfileScreen = () => {
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
+  const { toggleTheme } = useTheme();
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(!isEnabled);
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
+    toggleTheme();
+  };
   const [loading, setLoading] = useState(false);
 
   const handleLogout = () => {
@@ -25,8 +32,9 @@ const ProfileScreen = () => {
   };
 
   return (
+        <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <View className="mt-4 flex flex-1 px-4">
-      <Text className="px-2 text-2xl font-bold">Profile</Text>
+      <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Profile</Text>
       <View className="mt-4 flex gap-3">
         <View className="flex flex-row items-center justify-between rounded-lg bg-amber-300 p-2">
           <View className="flex flex-row items-center gap-4">
@@ -60,12 +68,15 @@ const ProfileScreen = () => {
         <Pressable
           className="flex flex-row items-center justify-center gap-2 rounded-lg bg-neutral-400 p-4"
           onPress={handleLogout}
-          disabled={loading}
-        >
-          {loading ? <ActivityIndicator color="#000000" /> : <Text className="font-bold">Logout</Text>}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#000000" />
+          ) : (
+            <Text className="font-bold">Logout</Text>
+          )}
         </Pressable>
       </View>
-    </View>
+    </View></View>
   );
 };
 

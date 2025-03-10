@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { db } from '../../utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useTheme } from '../../ThemeContext';
 
 type Book = {
   id: string;
@@ -14,6 +15,8 @@ type Book = {
 };
 
 const Wishlist = () => {
+  const { theme } = useTheme();
+  const headingColor = theme === 'light' ? 'black' : 'white';
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,10 +65,11 @@ const Wishlist = () => {
   }
 
   return (
+    <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <View className="flex flex-1 px-2 mt-4">
-      <Text className="text-2xl font-bold px-2">Wishlist</Text>
+      <Text className="text-2xl font-bold px-2" style={{ color: headingColor }}>Wishlist</Text>
       {books.length === 0 ? (
-        <Text className="mt-4 text-center text-lg">Your wishlist is empty.</Text>
+        <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>Your wishlist is empty.</Text>
       ) : (
         <FlashList
           showsVerticalScrollIndicator={false}
@@ -84,7 +88,7 @@ const Wishlist = () => {
           )}
         />
       )}
-    </View>
+    </View></View>
   );
 };
 

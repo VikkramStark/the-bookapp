@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from '@shopify/flash-list';
 import { useAuth } from '../../hooks/useAuth';
 import { db } from '../../utils/firebase';
+import { useTheme } from '../../ThemeContext';
 
 import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, setDoc,getDoc, Timestamp,arrayRemove } from 'firebase/firestore';
 
@@ -18,6 +19,8 @@ type Book = {
 };
 
 const Explore = () => {
+    const { theme } = useTheme();
+    const headingColor = theme === 'light' ? 'black' : 'white';
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,10 +117,11 @@ const Explore = () => {
   }
 
   return (
+            <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <View className="flex flex-1 px-2 mt-4">
-      <Text className="text-2xl font-bold px-2">Available books</Text>
+      <Text className="text-2xl font-bold px-2" style={{ color: headingColor }}>Available books</Text>
       {books.length === 0 ? (
-        <Text className="mt-4 text-center text-lg">No available books.</Text>
+        <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>No available books.</Text>
       ) : (
         <FlashList
           estimatedItemSize={6}
@@ -156,7 +160,7 @@ const Explore = () => {
           )}
         />
       )}
-    </View>
+    </View></View>
   );
 };
 

@@ -82,7 +82,7 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin }: HomeScr
   }
 
   return (
-    <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}><View className="mb-4">
+    <View className={`flex flex-1`}><View className="mb-4">
     <View className="flex flex-row justify-between px-2">
       <Text className="text-xl font-semibold" style={{ color: headingColor }}>{title}</Text>
       <Link href={goto} className="pl-4 text-neutral-600">
