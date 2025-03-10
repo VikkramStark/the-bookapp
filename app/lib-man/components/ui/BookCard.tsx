@@ -14,6 +14,7 @@ type BookCardProps = {
   isadmin: boolean;
   isAdminLibrary?: boolean;
   bookStatusId?: ButtonId;
+  onAvailablePress?: () => void; // Add prop for button click
 };
 
 const BookCard = ({
@@ -24,13 +25,13 @@ const BookCard = ({
   width,
   isadmin,
   isAdminLibrary = false,
-  bookStatusId = 'available', // Default value
+  bookStatusId = 'available',
+  onAvailablePress, // Destructure new prop
 }: BookCardProps) => {
-  // Validate bookStatusId
   const validStatuses: ButtonId[] = ['penalty', 'available', 'borrowed'];
   const normalizedStatus: ButtonId = validStatuses.includes(bookStatusId)
     ? bookStatusId
-    : 'available'; // Fallback to 'available' if invalid
+    : 'available';
 
   if (height === '56' && width === '40') {
     return (
@@ -50,12 +51,18 @@ const BookCard = ({
             ) : (
               <Text className="text-xl text-white">available in</Text>
             )
+          ) : days === '0' ? (
+            <View className="absolute bottom-0 right-0 m-2 rounded-lg">
+              <GradientButton id="available" onPress={onAvailablePress} />
+            </View>
           ) : isReturn ? (
             <Text className="text-xl text-white">return in </Text>
           ) : (
             <Text className="text-xl text-white">available in</Text>
           )}
-          {!isAdminLibrary && <Text className="text-2xl font-semibold text-white">{days}</Text>}
+          {!isAdminLibrary && days !== '0' && (
+            <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+          )}
         </LinearGradient>
       </View>
     );
@@ -77,17 +84,23 @@ const BookCard = ({
             ) : (
               <Text className="text-xl text-white">available in</Text>
             )
+          ) : days === '0' ? (
+            <View className="absolute bottom-0 right-0 m-2 rounded-lg">
+              <GradientButton id="available" onPress={onAvailablePress} />
+            </View>
           ) : isReturn ? (
             <Text className="text-xl text-white">return in </Text>
           ) : (
             <Text className="text-xl text-white">available in</Text>
           )}
-          {!isAdminLibrary && <Text className="text-2xl font-semibold text-white">{days}</Text>}
+          {!isAdminLibrary && days !== '0' && (
+            <Text className="text-2xl font-semibold text-white">{days} Days</Text>
+          )}
         </LinearGradient>
       </View>
     );
   }
-  return null; // Fallback if height/width don't match
+  return null;
 };
 
 export default BookCard;

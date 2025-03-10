@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../../constants/colors';
@@ -7,6 +7,7 @@ type ButtonId = 'penalty' | 'available' | 'borrowed' | 'Accept' | 'Decline';
 
 type GradientButtonProps = {
   id: ButtonId;
+  onPress?: () => void; // Add optional onPress prop
 };
 
 const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, string]; text: string }> = {
@@ -32,20 +33,19 @@ const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, strin
   },
 };
 
-// Default fallback button data
 const defaultButtonData = {
-  colours: ['#808080', '#505050', '#303030'] as const, // Gray gradient as fallback
+  colours: ['#808080', '#505050', '#303030'] as const,
   text: 'Unknown',
 };
 
-const GradientButton = ({ id }: GradientButtonProps) => {
-  const button = buttonDataMap[id] || defaultButtonData; // Use fallback if id is invalid
+const GradientButton = ({ id, onPress }: GradientButtonProps) => {
+  const button = buttonDataMap[id] || defaultButtonData;
   return (
-    <View className="overflow-hidden rounded-md">
+    <Pressable onPress={onPress} className="overflow-hidden rounded-md">
       <LinearGradient className="p-4" colors={button.colours}>
         <Text className="rounded-lg text-green-50">{button.text}</Text>
       </LinearGradient>
-    </View>
+    </Pressable>
   );
 };
 

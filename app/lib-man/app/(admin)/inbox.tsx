@@ -121,6 +121,22 @@ const Inbox = () => {
 
   return (
     <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+      <View className="flex h-16 w-full items-center justify-center py-2">
+                {theme === 'dark' ? (
+                  <Image
+                    source={require('../../assets/logo-white-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/logo-black-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                )}
+              </View>
+      
     <View className="mt-4 flex flex-1 px-2">
       <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Inbox</Text>
       {requests.length === 0 ? (

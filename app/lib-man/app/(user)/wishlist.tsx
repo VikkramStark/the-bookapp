@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
@@ -7,6 +7,7 @@ import { db } from '../../utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
+import { useRouter } from 'expo-router';
 
 type Book = {
   id: string;
@@ -20,6 +21,7 @@ const Wishlist = () => {
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -27,7 +29,6 @@ const Wishlist = () => {
 
       setLoading(true);
       try {
-        // Get the user's wishlist
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         const wishlistBookIds = userDoc.data()?.wishlist || [];
 
@@ -37,11 +38,7 @@ const Wishlist = () => {
           return;
         }
 
-        // Fetch the books
-        const booksQuery = query(
-          collection(db, 'books'),
-          where('__name__', 'in', wishlistBookIds)
-        );
+        const booksQuery = query(collection(db, 'books'), where('__name__', 'in', wishlistBookIds));
         const booksSnapshot = await getDocs(booksQuery);
         const booksData = booksSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -60,35 +57,59 @@ const Wishlist = () => {
     fetchWishlist();
   }, [user]);
 
+  const handleAvailablePress = (bookId: string) => {
+    router.push(`/explore/${bookId}`); // Navigate to book's detail in explore
+  };
+
   if (loading) {
     return <ActivityIndicator size="large" className="mt-4" />;
   }
 
   return (
     <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-    <View className="flex flex-1 px-2 mt-4">
-      <Text className="text-2xl font-bold px-2" style={{ color: headingColor }}>Wishlist</Text>
-      {books.length === 0 ? (
-        <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>Your wishlist is empty.</Text>
-      ) : (
-        <FlashList
-          showsVerticalScrollIndicator={false}
-          data={books}
-          numColumns={2}
-          estimatedItemSize={6}
-          renderItem={({ item }) => (
-            <BookCard
-              days={item.returnDays.toString()}
-              isReturn={false}
-              imgUrl={item.imgUrl}
-              height="64"
-              width="48"
-              isadmin={false}
-            />
-          )}
-        />
-      )}
-    </View></View>
+      <View className="flex h-16 w-full items-center justify-center py-2">
+                {theme === 'dark' ? (
+                  <Image
+                    source={require('../../assets/logo-white-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/logo-black-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                )}
+              </View>
+      
+      <View className="mt-4 flex flex-1 px-2">
+        <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>Wishlist</Text>
+        {books.length === 0 ? (
+          <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>Your wishlist is empty.</Text>
+        ) : (
+          <FlashList
+            showsVerticalScrollIndicator={false}
+            data={books}
+            numColumns={2}
+            estimatedItemSize={6}
+            renderItem={({ item }) => (
+              <BookCard
+                days={item.returnDays.toString()}
+                isReturn={false}
+                imgUrl={item.imgUrl}
+                height="64"
+                width="48"
+                isadmin={false}
+                onAvailablePress={
+                  item.returnDays === 0 ? () => handleAvailablePress(item.id) : undefined
+                }
+              />
+            )}
+          />
+        )}
+      </View>
+    </View>
   );
 };
 

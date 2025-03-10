@@ -1,4 +1,4 @@
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { ScrollView, ActivityIndicator,View,Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
@@ -40,6 +40,22 @@ const Home = () => {
 
   return (
     <ScrollView className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+      <View className="flex h-16 w-full items-center justify-center py-2">
+                {theme === 'dark' ? (
+                  <Image
+                    source={require('../../assets/logo-white-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/logo-black-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                )}
+              </View>
+      
       <HomeInfoCard
         name="Admin"
         card1text={`Books\navailable`}

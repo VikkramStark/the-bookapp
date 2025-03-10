@@ -107,6 +107,22 @@ const AddBooks = () => {
 
   return (
     <KeyboardAvoidingView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View className="flex h-16 w-full items-center justify-center py-2">
+                {theme === 'dark' ? (
+                  <Image
+                    source={require('../../assets/logo-white-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/logo-black-side.png')}
+                    className="h-full w-auto"
+                    resizeMode="contain"
+                  />
+                )}
+              </View>
+      
       <ScrollView className="flex-1 mx-2 " showsVerticalScrollIndicator={false}>
         <Pressable onPress={() => router.back()} className="mb-4 mt-2 flex flex-row items-center">
           <Ionicons name="chevron-back" size={24}  style={{ color: headingColor }} />
