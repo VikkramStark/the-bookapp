@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Image, Pressable, ActivityIndicator,SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import GradientButton from '../../components/ui/GradientButtons';
@@ -126,10 +126,12 @@ const Inbox = () => {
   
 
   if (loading) {
-    return <ActivityIndicator size="large" className="mt-4" />;
+
+    return (<SafeAreaView><ActivityIndicator size="large" className="mt-4" /></SafeAreaView>);
   }
 
   return (
+    <SafeAreaView>
     <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className="flex h-16 w-full items-center justify-center py-2">
         {theme === 'dark' ? (
@@ -187,6 +189,7 @@ const Inbox = () => {
         )}
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Image } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image ,SafeAreaView} from 'react-native';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Pressable, TextInput ,ActivityIndicator} from 'react-native';
@@ -24,6 +24,7 @@ export default  function ForgotPasswordScreen() {
   };
 
   return (
+    <SafeAreaView>
     <KeyboardAvoidingView className="mx-4 flex flex-1 justify-center gap-6">
       <Image source={require('../../assets/logo-black-updown.png')} className="flex h-64 w-52 self-center" />
       <Text className="font-bold text-xl">Find your account</Text>
@@ -44,5 +45,6 @@ export default  function ForgotPasswordScreen() {
         </Pressable>
       </View>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };

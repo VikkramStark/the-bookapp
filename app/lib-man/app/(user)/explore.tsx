@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native'; // Removed ScrollView
+import { View, Text, Image, Pressable, ActivityIndicator ,SafeAreaView} from 'react-native'; 
 import React, { useEffect, useState, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from '@shopify/flash-list';
@@ -159,6 +159,7 @@ const Explore = () => {
 
   if (loading) {
     return (
+      <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
         <View className="mx-2 flex h-16 w-full items-center justify-center py-2">
           {theme === 'dark' ? (
@@ -190,10 +191,12 @@ const Explore = () => {
           </View>
         )}
       </View>
+      </SafeAreaView>
     );
   }
 
   return (
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className="flex h-16 w-full items-center justify-center py-2">
         {theme === 'dark' ? (
@@ -284,47 +287,40 @@ const Explore = () => {
               </Text>
               <View className="mt-4">
                 <Text className="text-md" style={{ color: headingColor }}>
-                  ISBN:
-                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                  ISBN: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.isbn}
                   </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Category:
-                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                  Category: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.category}
                   </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Edition:
-                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                  Edition: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.edition}
                   </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }} numberOfLines={3}
   ellipsizeMode="tail">
-                  Description:
-                  <Text
+                  Description: <Text
 
                     style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.description}
                   </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Publisher:
-                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                  Publisher: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.publisher}
                   </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Language:
-                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                  Language: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.language}
                   </Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
-                  Max Borrow Days:
-                  <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
+                  Max Borrow Days: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                     {selectedBook.maxBorrowDays}
                   </Text>
                 </Text>
@@ -361,6 +357,7 @@ const Explore = () => {
         </BottomSheetView>
       </BottomSheet>
     </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 

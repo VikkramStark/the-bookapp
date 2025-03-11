@@ -1,4 +1,4 @@
-import { ScrollView, ActivityIndicator, View, Image } from 'react-native';
+import { ScrollView, ActivityIndicator, View, Image ,SafeAreaView} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
@@ -38,6 +38,7 @@ const Home = () => {
   if (loading) {
     // return <ActivityIndicator size="large" className="mt-4" />;
     return (
+      <SafeAreaView>
       <ScrollView
         className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
         showsVerticalScrollIndicator={false}>
@@ -67,10 +68,12 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
+      </SafeAreaView>
     );
   }
 
   return (
+    <SafeAreaView>
     <ScrollView
       className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
       showsVerticalScrollIndicator={false}>
@@ -103,6 +106,7 @@ const Home = () => {
       <HomeScroll title="Borrowed books" goto="/(admin)/library" isBorrowed={true} isAdmin={true} />
       
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

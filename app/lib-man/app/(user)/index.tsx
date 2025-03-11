@@ -1,4 +1,4 @@
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
@@ -40,36 +40,38 @@ const Home = () => {
   }
 
   return (
-    <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="flex h-16 w-full items-center justify-center py-2">
-          {theme === 'dark' ? (
-            <Image
-              source={require('../../assets/logo-white-side.png')}
-              className="h-full w-auto"
-              resizeMode="contain"
-            />
-          ) : (
-            <Image
-              source={require('../../assets/logo-black-side.png')}
-              className="h-full w-auto"
-              resizeMode="contain"
-            />
-          )}
-        </View>
+    <SafeAreaView className="flex-1">
+      <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          <View className="flex h-16 w-full items-center justify-center py-2">
+            {theme === 'dark' ? (
+              <Image
+                source={require('../../assets/logo-white-side.png')}
+                className="h-full w-auto"
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require('../../assets/logo-black-side.png')}
+                className="h-full w-auto"
+                resizeMode="contain"
+              />
+            )}
+          </View>
 
-        <HomeInfoCard
-          name={user?.displayName || user?.email?.split('@')[0] || 'User'} 
-          card1text={`Books\nborrowed`}
-          card1no={borrowedCount.toString()}
-          card2no={penaltyFee.toString()}
-          card2text={`Penalty\nfee`}
-          isAdmin={false}
-        />
-        <HomeScroll title="Owned books" goto="/(user)/books" isBorrowed={true} isAdmin={false} />
-        <HomeScroll title="Wishlist" goto="/(user)/wishlist" isBorrowed={false} isAdmin={false} />
-      </ScrollView>
-    </View>
+          <HomeInfoCard
+            name={user?.displayName || user?.email?.split('@')[0] || 'User'}
+            card1text={`Books\nborrowed`}
+            card1no={borrowedCount.toString()}
+            card2no={penaltyFee.toString()}
+            card2text={`Penalty\nfee`}
+            isAdmin={false}
+          />
+          <HomeScroll title="Owned books" goto="/(user)/books" isBorrowed={true} isAdmin={false} />
+          <HomeScroll title="Wishlist" goto="/(user)/wishlist" isBorrowed={false} isAdmin={false} />
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 

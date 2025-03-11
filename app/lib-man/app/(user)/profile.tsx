@@ -1,4 +1,4 @@
-import { View, Text, Switch, Image, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Switch, Image, Pressable, ActivityIndicator, SafeAreaView } from 'react-native';
 import React from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
@@ -32,6 +32,7 @@ const ProfileScreen = () => {
   };
 
   return (
+    <SafeAreaView className='flex-1'>
         <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
           <View className="flex h-16 w-full items-center justify-center py-2">
                     {theme === 'dark' ? (
@@ -93,6 +94,7 @@ const ProfileScreen = () => {
         </Pressable>
       </View>
     </View></View>
+    </SafeAreaView>
   );
 };
 

@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
+import { View, Text, ActivityIndicator, Image, ScrollView, Pressable ,SafeAreaView} from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -113,6 +113,7 @@ const Books = () => {
 
   if (loading) {
     return (
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
         <View className="flex h-16 w-full items-center justify-center py-2 mx-2">
           {theme === 'dark' ? (
@@ -144,10 +145,12 @@ const Books = () => {
           </View>
         )}
       </View>
+      </SafeAreaView>
     );
   }
 
   return (
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className="flex h-16 w-full items-center justify-center py-2">
         {theme === 'dark' ? (
@@ -266,6 +269,7 @@ const Books = () => {
         </BottomSheetView>
       </BottomSheet>
     </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 

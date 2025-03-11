@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, Image } from 'react-native';
+import { View, Text, ActivityIndicator, Image ,SafeAreaView} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
@@ -64,6 +64,7 @@ const Wishlist = () => {
   if (loading) {
     // return <ActivityIndicator size="large" className="mt-4" />;
     return (
+      <SafeAreaView className='flex-1'>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
         <View className="flex h-16 w-full items-center justify-center py-2 mx-2">
           {theme === 'dark' ? (
@@ -92,6 +93,7 @@ const Wishlist = () => {
         </View>)}
         
       </View>
+      </SafeAreaView>
     );
   }
 

@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Image, ActivityIndicator, Platform, Pressable, TextInput } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, ActivityIndicator, Platform, Pressable, TextInput ,SafeAreaView} from 'react-native';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -69,6 +69,7 @@ const LoginScreen = () => {
   };
 
   return (
+    <SafeAreaView>
     <KeyboardAvoidingView  className="mx-4 flex flex-1 justify-center gap-6" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Image
         source={require('../../assets/logo-black-updown.png')}
@@ -127,6 +128,7 @@ const LoginScreen = () => {
         </Link>
       </View>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

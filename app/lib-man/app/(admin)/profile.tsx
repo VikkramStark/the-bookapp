@@ -1,4 +1,4 @@
-import { View, Text, Switch, Image, Pressable, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Switch, Image, Pressable, ActivityIndicator, ScrollView ,SafeAreaView} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { signOut } from 'firebase/auth';
@@ -127,6 +127,7 @@ const ProfileScreen = () => {
   };
 
   return (
+    <SafeAreaView>
     <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
 
@@ -292,6 +293,7 @@ const ProfileScreen = () => {
         </BottomSheetView>
       </BottomSheet>
     </GestureHandlerRootView>
+    </SafeAreaView>
   );
 };
 

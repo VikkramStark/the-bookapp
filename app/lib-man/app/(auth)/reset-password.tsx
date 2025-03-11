@@ -1,10 +1,11 @@
-import { View, Text, KeyboardAvoidingView, Image } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image ,SafeAreaView} from 'react-native';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Pressable, TextInput } from 'react-native';
 
 const ResetPasswordScreen = () => {
   return (
+    <SafeAreaView>
     <KeyboardAvoidingView className="mx-4 flex flex-1 justify-center gap-6">
       <Image
         source={require('../../assets/logo-black-updown.png')}
@@ -26,6 +27,7 @@ const ResetPasswordScreen = () => {
         </Pressable>
       </View>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
