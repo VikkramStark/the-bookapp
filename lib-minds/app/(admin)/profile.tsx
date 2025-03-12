@@ -28,16 +28,15 @@ const ProfileScreen = () => {
   const [usersLoading, setUsersLoading] = useState(false);
   const [updating, setUpdating] = useState<string | null>(null);
   const [activeSheet, setActiveSheet] = useState<'profile' | 'users' | 'edit' | null>(null);
-  const [username, setUsername] = useState<string>(''); // Dynamic username
-  const [editUsername, setEditUsername] = useState<string>(''); // For editing
-  const [isEditing, setIsEditing] = useState(false); // Editing state
+  const [username, setUsername] = useState<string>(''); 
+  const [editUsername, setEditUsername] = useState<string>(''); 
+  const [isEditing, setIsEditing] = useState(false); 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   useEffect(() => {
     setIsEnabled(theme === 'dark');
   }, [theme]);
 
-  // Fetch initial username
   useEffect(() => {
     const fetchUsername = async () => {
       if (!auth.currentUser) return;
@@ -201,7 +200,7 @@ const ProfileScreen = () => {
           <View className="mt-4 flex gap-3">
             <Pressable
               className="flex flex-row items-center justify-between rounded-lg bg-amber-300 p-2"
-              onPress={handleEditProfile} // Changed to edit profile
+              onPress={handleEditProfile} 
               disabled={profileLoading}
             >
               <View className="flex flex-row items-center gap-4">
@@ -279,19 +278,19 @@ const ProfileScreen = () => {
                 </Text>
                 <View className="mt-4">
                   <Text className="text-lg" style={{ color: headingColor }}>
-                    Name:{' '}
+                    Name:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {adminProfile.name}
                     </Text>
                   </Text>
                   <Text className="text-lg mt-2" style={{ color: headingColor }}>
-                    Email:{' '}
+                    Email:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {adminProfile.email}
                     </Text>
                   </Text>
                   <Text className="text-lg mt-2" style={{ color: headingColor }}>
-                    Role:{' '}
+                    Role:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {adminProfile.role}
                     </Text>

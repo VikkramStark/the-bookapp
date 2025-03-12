@@ -222,7 +222,6 @@ const Books = () => {
           )}
         </View>
 
-        {/* Bottom Sheet */}
         <BottomSheet
           ref={bottomSheetRef}
           index={-1}
@@ -231,7 +230,7 @@ const Books = () => {
           backgroundStyle={{
             backgroundColor: theme === 'dark' ? '#1F2937' : '#FFFFFF',
           }}
-          onClose={() => setRequestSent(false)} // Reset on close
+          onClose={() => setRequestSent(false)} 
         >
           <BottomSheetView  className='flex-1 p-4'>
             {selectedBook ? (
@@ -255,63 +254,62 @@ const Books = () => {
                 </Text>
                 <View className="mt-4">
                   <Text className="text-md" style={{ color: headingColor }}>
-                    ISBN:{' '}
+                    ISBN:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.isbn}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Category:{' '}
+                    Category:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.category}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Edition:{' '}
+                    Edition:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.edition}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }} numberOfLines={3}
     ellipsizeMode="tail">
-                    Description:{' '}
+                    Description:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.description}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Publisher:{' '}
+                    Publisher:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.publisher}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Language:{' '}
+                    Language:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.language}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Quantity:{' '}
+                    Quantity:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.quantity}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Max Borrow Days:{' '}
+                    Max Borrow Days:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.maxBorrowDays}
                     </Text>
                   </Text>
                   <Text className="text-md mt-2" style={{ color: headingColor }}>
-                    Return in:{' '}
+                    Return in:
                     <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>
                       {selectedBook.returnDays} days
                     </Text>
                   </Text>
                 </View>
 
-                {/* Damage Reporting Toggle */}
                 <View className="mt-6">
                   <Text className="text-md font-semibold" style={{ color: headingColor }}>
                     Is the book damaged?
@@ -326,7 +324,6 @@ const Books = () => {
                   </Pressable>
                 </View>
 
-                {/* Return Button */}
                 <View className="my-6 flex items-center">
                   {requestSent ? (
                     <Pressable disabled={true} className="p-2 rounded-lg bg-gray-400">

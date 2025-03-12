@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import setDoc
+import { doc, getDoc, setDoc } from 'firebase/firestore'; 
 import { auth, db } from '../utils/firebase';
 
 type UserRole = 'user' | 'admin' | null;
@@ -17,10 +17,9 @@ export const useAuth = () => {
         if (userDoc.exists()) {
           setRole(userDoc.data().role || 'user');
         } else {
-          // If user doc doesn't exist, create one
           await setDoc(doc(db, 'users', user.uid), {
             email: user.email,
-            role: 'user', // Default to 'user' role
+            role: 'user', 
             borrowedBooks: [],
             wishlist: [],
             penaltyFee: 0,

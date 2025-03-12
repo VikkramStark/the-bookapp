@@ -34,7 +34,7 @@ export default function UserLayout() {
   }, [user, loading]);
 
   if (loading) {
-    return null; // Optionally show a loading indicator
+    return null; 
   }
 
   return (

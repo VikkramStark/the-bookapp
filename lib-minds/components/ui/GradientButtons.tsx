@@ -9,7 +9,7 @@ interface GradientButtonProps {
   id: ButtonId;
   onPress?: () => void;
   disabled?: boolean;
-  children?: React.ReactNode; // Add children prop
+  children?: React.ReactNode; 
 }
 
 const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, string]; text: string }> = {

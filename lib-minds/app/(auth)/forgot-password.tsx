@@ -2,9 +2,9 @@ import { View, Text, KeyboardAvoidingView, Image, Pressable, TextInput, Activity
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { StatusBar } from 'expo-status-bar';
-import { useTheme } from '../../ThemeContext'; // Assuming ThemeContext exists
+import { useTheme } from '../../ThemeContext'; 
 import { auth } from '../../utils/firebase';
-import { useRouter } from 'expo-router'; // For navigation
+import { useRouter } from 'expo-router'; 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function ForgotPasswordScreen() {
@@ -14,7 +14,6 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
 
-  // Email validation regex
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleReset = async () => {
@@ -52,7 +51,7 @@ export default function ForgotPasswordScreen() {
   };
 
   const handleBackToLogin = () => {
-    router.replace('/(auth)/login'); // Adjust path based on your app's structure
+    router.replace('/(auth)/login'); 
   };
 
   const headingColor = theme === 'light' ? 'black' : 'white';
@@ -68,7 +67,6 @@ export default function ForgotPasswordScreen() {
         behavior="padding"
         className={`mx-4 flex flex-1 justify-center gap-6`}
       >
-        {/* Logo */}
         <View className="flex items-center">
           <Image
             source={
@@ -80,13 +78,9 @@ export default function ForgotPasswordScreen() {
             resizeMode="contain"
           />
         </View>
-
-        {/* Title */}
         <Text className={`font-bold text-2xl ${textColor}`} style={{ color: headingColor }}>
           Reset Your Password
         </Text>
-
-        {/* Form */}
         <View className="gap-4">
           <Text className={`text-base ${textColor}`}>
             Enter your email address to receive a password reset link.
@@ -103,14 +97,12 @@ export default function ForgotPasswordScreen() {
             accessibilityLabel="Email input"
           />
 
-          {/* Message */}
           {message && (
             <Text className={`text-base ${messageColor}`}>
               {message.text}
             </Text>
           )}
 
-          {/* Continue Button */}
           <Pressable
             className={`flex items-center rounded-full border-2 border-black bg-amber-400 p-4 ${loading ? 'opacity-50' : ''}`}
             onPress={handleReset}
@@ -123,8 +115,6 @@ export default function ForgotPasswordScreen() {
               <Text className="font-bold text-black">Send Reset Link</Text>
             )}
           </Pressable>
-
-          {/* Back to Login */}
           <Pressable
             className="flex flex-row items-center justify-center gap-2"
             onPress={handleBackToLogin}

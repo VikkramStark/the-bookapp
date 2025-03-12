@@ -42,7 +42,6 @@ const AddBooks = () => {
   };
 
   const handleAddBook = async () => {
-    // Validate all required fields
     if (
       !isbn ||
       !title ||
@@ -59,7 +58,6 @@ const AddBooks = () => {
       return;
     }
 
-    // Validate quantity and maxBorrowDays as positive numbers
     const maxBorrowDaysNum = parseInt(maxBorrowDays, 10);
     if ( isNaN(maxBorrowDaysNum) || maxBorrowDaysNum <= 0) {
       alert('Max borrow days must be positive numbers.');
@@ -78,7 +76,7 @@ const AddBooks = () => {
         publisher,
         language,
         maxBorrowDays: maxBorrowDaysNum,
-        imgUrl: image, // TODO: Replace with Firebase Storage URL
+        imgUrl: image, 
         status: 'available',
         borrowedBy: null,
         borrowedAt: null,
@@ -86,7 +84,6 @@ const AddBooks = () => {
       });
 
       alert('Book added successfully!');
-      // Reset form
       setIsbn('');
       setTitle('');
       setAuthor('');

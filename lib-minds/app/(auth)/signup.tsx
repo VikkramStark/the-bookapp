@@ -45,8 +45,6 @@ const SignUpScreen = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         role: 'user',
@@ -55,7 +53,6 @@ const SignUpScreen = () => {
         penaltyFee: 0,
       });
 
-      // Navigation handled by (auth)/_layout.tsx
     } catch (error: any) {
       setError(true);
       let errorMessage = error.message;

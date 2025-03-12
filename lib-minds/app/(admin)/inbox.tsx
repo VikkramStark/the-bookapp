@@ -19,7 +19,7 @@ type Request = {
   status: 'pending' | 'accepted' | 'declined';
   requestType: 'borrow' | 'return';
   imgUrl: string;
-  isDamaged: boolean; // New field
+  isDamaged: boolean; 
 };
 
 const DetailsRow = ({ label, value }: { label: string; value: string }) => {
@@ -62,7 +62,7 @@ const Inbox = () => {
               status: requestData.status,
               requestType: requestData.requestType || 'borrow',
               imgUrl: bookDoc.exists() ? bookDoc.data().imgUrl : '',
-              isDamaged: requestData.isDamaged || false, // Default to false if not set
+              isDamaged: requestData.isDamaged || false, 
             };
           })
         );
@@ -99,7 +99,7 @@ const Inbox = () => {
           borrowedAt: null,
           returnDays: 0,
           returnDate: null,
-          ...(request.isDamaged && { condition: 'damaged' }), // Optional: Track damage
+          ...(request.isDamaged && { condition: 'damaged' }), 
         });
         await updateDoc(doc(db, 'users', request.userId), {
           borrowedBooks: arrayRemove(request.bookId),

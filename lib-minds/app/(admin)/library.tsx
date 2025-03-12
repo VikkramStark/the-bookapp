@@ -25,10 +25,10 @@ type Book = {
   publisher: string;
   language: string;
   maxBorrowDays: number;
-  borrowedBy?: string | null; // User ID of borrower
-  borrowedAt?: any | null; // Timestamp
-  returnDays?: number; // Days remaining
-  returnDate?: any | null; // Timestamp
+  borrowedBy?: string | null; 
+  borrowedAt?: any | null; 
+  returnDays?: number; 
+  returnDate?: any | null; 
 };
 
 const Library = () => {
@@ -189,10 +189,9 @@ const Library = () => {
       </View>
       </View>
 
-      {/* Bottom Sheet */}
       <BottomSheet
         ref={bottomSheetRef}
-        index={-1} // Closed by default
+        index={-1} 
         snapPoints={['50%', '90%']}
         enablePanDownToClose={true}
         backgroundStyle={{

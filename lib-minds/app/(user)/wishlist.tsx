@@ -42,7 +42,6 @@ const Wishlist = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  // Slider values
   const progress = useSharedValue(1);
   const min = useSharedValue(1);
   const max = useSharedValue(14);
@@ -102,7 +101,6 @@ const Wishlist = () => {
     if (!selectedBook || !user) return;
 
     try {
-      // Submit borrow request
       await setDoc(doc(collection(db, 'requests')), {
         bookId: selectedBook.id,
         userId: user.uid,
@@ -114,13 +112,11 @@ const Wishlist = () => {
         createdAt: Timestamp.now(),
       });
 
-      // Remove from wishlist
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         wishlist: arrayRemove(selectedBook.id),
       });
 
-      // Update local state
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== selectedBook.id));
 
       alert('Borrow request submitted! An admin will review it.');

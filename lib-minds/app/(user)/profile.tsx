@@ -2,7 +2,7 @@ import { View, Text, Switch, Image, Pressable, ActivityIndicator,  TextInput } f
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useAuth } from '../../hooks/useAuth'; // Assuming useAuth provides the user
+import { useAuth } from '../../hooks/useAuth'; 
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../utils/firebase';
 import { useTheme } from '../../ThemeContext';
@@ -16,15 +16,14 @@ const ProfileScreen = () => {
   const headingColor = theme === 'light' ? 'black' : 'white';
   const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const { toggleTheme } = useTheme();
-  const { user } = useAuth(); // Get the authenticated user
-  const [isEnabled, setIsEnabled] = useState(false);
+  const { user } = useAuth(); 
+  const [isEnabled, setIsEnabled] = useState(theme == 'light'?false:true); 
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState<string>(''); // Dynamic username
-  const [editUsername, setEditUsername] = useState<string>(''); // For editing in bottom sheet
-  const [isEditing, setIsEditing] = useState(false); // Loading state for saving username
+  const [username, setUsername] = useState<string>(''); 
+  const [editUsername, setEditUsername] = useState<string>(''); 
+  const [isEditing, setIsEditing] = useState(false); 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  // Fetch or set initial username from email or Firestore
   useEffect(() => {
     const fetchUsername = async () => {
       if (!user) return;
@@ -34,10 +33,8 @@ const ProfileScreen = () => {
       if (userDoc.exists() && userDoc.data().username) {
         setUsername(userDoc.data().username);
       } else {
-        // Default to email prefix if no username exists
         const emailPrefix = user.email?.split('@')[0] || 'User';
         setUsername(emailPrefix);
-        // Optionally initialize in Firestore
         await setDoc(userDocRef, { username: emailPrefix }, { merge: true });
       }
     };
@@ -65,7 +62,7 @@ const ProfileScreen = () => {
   };
 
   const handleProfilePress = () => {
-    setEditUsername(username); // Pre-fill with current username
+    setEditUsername(username); 
     bottomSheetRef.current?.expand();
   };
 
@@ -155,7 +152,6 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* Bottom Sheet for Editing Username */}
         <BottomSheet
           ref={bottomSheetRef}
           index={-1}

@@ -1,4 +1,4 @@
-import { ScrollView, ActivityIndicator} from 'react-native';
+import { ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import HomeScroll from '../../components/layout/HomeScroll';
@@ -16,7 +16,7 @@ const Home = () => {
   const { user } = useAuth();
   const [borrowedCount, setBorrowedCount] = useState(0);
   const [penaltyFee, setPenaltyFee] = useState(0);
-  const [username, setUsername] = useState<string>(''); // Add username state
+  const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,7 +29,6 @@ const Home = () => {
         const userData = userDoc.data();
         setBorrowedCount(userData?.borrowedBooks?.length || 0);
         setPenaltyFee(userData?.penaltyFee || 0);
-        // Set username from Firestore, fallback to email prefix if not set
         setUsername(userData?.username || user?.email?.split('@')[0] || 'User');
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -66,7 +65,7 @@ const Home = () => {
           </View>
 
           <HomeInfoCard
-            name={username} // Use fetched username
+            name={username}
             card1text={`Books\nborrowed`}
             card1no={borrowedCount.toString()}
             card2no={penaltyFee.toString()}
@@ -76,7 +75,7 @@ const Home = () => {
           <HomeScroll title="Owned books" goto="/(user)/books" isBorrowed={true} isAdmin={false} />
           <HomeScroll title="Wishlist" goto="/(user)/wishlist" isBorrowed={false} isAdmin={false} />
         </ScrollView>
-      <StatusBar style={statusbarColor} />
+        <StatusBar style={statusbarColor} />
       </View>
     </SafeAreaView>
   );
