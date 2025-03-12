@@ -1,5 +1,6 @@
-import { View, Text, KeyboardAvoidingView, Image ,SafeAreaView} from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, KeyboardAvoidingView, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Pressable, TextInput } from 'react-native';
 
@@ -27,6 +28,7 @@ const ResetPasswordScreen = () => {
         </Pressable>
       </View>
     </KeyboardAvoidingView>
+        <StatusBar style={'dark'} />
     </SafeAreaView>
   );
 };

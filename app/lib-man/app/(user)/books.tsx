@@ -1,4 +1,5 @@
-import { View, Text, ActivityIndicator, Image, ScrollView, Pressable, SafeAreaView } from 'react-native';
+import { View, Text, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -232,7 +233,7 @@ const Books = () => {
           }}
           onClose={() => setRequestSent(false)} // Reset on close
         >
-          <BottomSheetView style={{ flex: 1, padding: 16 }}>
+          <BottomSheetView  className='flex-1 p-4'>
             {selectedBook ? (
               <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
                 <Image

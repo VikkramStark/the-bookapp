@@ -1,4 +1,5 @@
-import { View, Text, ActivityIndicator, Image, SafeAreaView } from 'react-native';
+import { View, Text, ActivityIndicator, Image} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
@@ -139,9 +140,9 @@ const Wishlist = () => {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1">
+      <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-          <View className="flex h-16 w-full items-center justify-center py-2 mt-4">
+          <View className="flex h-16 w-full items-center justify-center py-2 ">
             {theme === 'dark' ? (
               <Image
                 source={require('../../assets/logo-white-side.png')}
@@ -157,7 +158,7 @@ const Wishlist = () => {
             )}
           </View>
           <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>
-            Wishlist
+            Favourites
           </Text>
           {theme === 'dark' ? (
             <View className="flex-1 flex-row justify-center gap-2">
@@ -176,9 +177,9 @@ const Wishlist = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-        <View className="flex h-16 w-full items-center justify-center py-2 mt-4">
+        <View className="flex h-16 w-full items-center justify-center py-2 ">
           {theme === 'dark' ? (
             <Image
               source={require('../../assets/logo-white-side.png')}
@@ -196,11 +197,11 @@ const Wishlist = () => {
 
         <View className="mt-4 flex flex-1 px-2">
           <Text className="px-2 text-2xl font-bold" style={{ color: headingColor }}>
-            Wishlist
+            Favourites
           </Text>
           {books.length === 0 ? (
             <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
-              Your wishlist is empty.
+              Your Favourites are empty.
             </Text>
           ) : (
             <FlashList

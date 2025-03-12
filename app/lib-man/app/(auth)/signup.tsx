@@ -1,4 +1,6 @@
-import { View, Text, KeyboardAvoidingView, Image, ActivityIndicator, Platform, Pressable, TextInput ,SafeAreaView} from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, ActivityIndicator, Platform, Pressable, TextInput} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -134,6 +136,7 @@ const SignUpScreen = () => {
         </Link>
       </View>
     </KeyboardAvoidingView>
+        <StatusBar style={'dark'} />
     </SafeAreaView>
   );
 };

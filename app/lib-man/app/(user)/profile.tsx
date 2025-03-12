@@ -1,4 +1,5 @@
-import { View, Text, Switch, Image, Pressable, ActivityIndicator, SafeAreaView, TextInput } from 'react-native';
+import { View, Text, Switch, Image, Pressable, ActivityIndicator,  TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from '../../hooks/useAuth'; // Assuming useAuth provides the user
@@ -86,9 +87,9 @@ const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-        <View className="flex h-16 w-full items-center justify-center py-2 mt-4">
+        <View className="flex h-16 w-full items-center justify-center py-2 ">
           {theme === 'dark' ? (
             <Image
               source={require('../../assets/logo-white-side.png')}
@@ -133,13 +134,13 @@ const ProfileScreen = () => {
               </View>
               <Switch onValueChange={toggleSwitch} value={isEnabled} ios_backgroundColor="#3e3e3e" />
             </View>
-            <View className="flex flex-row items-center justify-between rounded-lg bg-white p-4">
+            {/* <View className="flex flex-row items-center justify-between rounded-lg bg-white p-4">
               <View className="flex flex-row items-center gap-3">
                 <Ionicons name="alert-circle" size={24} color="black" />
                 <Text className="text-xl font-semibold">Report damaged book</Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="black" />
-            </View>
+            </View> */}
             <Pressable
               className="flex flex-row items-center justify-center gap-2 rounded-lg bg-neutral-400 p-4"
               onPress={handleLogout}

@@ -1,13 +1,32 @@
 import { Tabs, router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { auth, db } from '../../utils/firebase';
 import { View, Text } from 'react-native';
-
+import { doc, getDoc, collection, getDocs, updateDoc, setDoc } from 'firebase/firestore';
 export default function AdminLayout() {
   const { user, role, loading } = useAuth();
+  const [username, setUsername] = useState<string>('');
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!auth.currentUser) return;
+
+      const userDocRef = doc(db, 'users', auth.currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists() && userDoc.data().username) {
+        setUsername(userDoc.data().name);
+      } else {
+        const emailPrefix = auth.currentUser.email?.split('@')[0] || 'Admin';
+        setUsername(emailPrefix);
+        await setDoc(userDocRef, { name: emailPrefix }, { merge: true });
+      }
+    };
+
+    fetchUsername();
+  }, []);
 
   useEffect(() => {
     if (!loading && user && role !== 'admin') {
@@ -67,7 +86,7 @@ export default function AdminLayout() {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <View className="relative h-6 w-6 items-center justify-center rounded-full bg-gray-700">
-              <Text className="absolute font-bold text-white">A</Text>
+              <Text className="absolute font-bold text-white">{username[0]?.toUpperCase() || 'A'}</Text>
             </View>
           ),
         }}

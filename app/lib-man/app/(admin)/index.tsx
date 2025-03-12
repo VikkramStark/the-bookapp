@@ -1,5 +1,6 @@
-import { ScrollView, ActivityIndicator, View, Image, SafeAreaView } from 'react-native';
+import { ScrollView, ActivityIndicator, View, Image,Platform} from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
 import { db } from '../../utils/firebase';
@@ -7,10 +8,12 @@ import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firesto
 import { useTheme } from '../../ThemeContext';
 import { Skeleton } from 'moti/skeleton';
 import { useAuth } from '../../hooks/useAuth'; // Added to get current user
+import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
+  const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const { user } = useAuth(); // Added to get current user
   const [availableCount, setAvailableCount] = useState(0);
   const [borrowedCount, setBorrowedCount] = useState(0);
@@ -48,6 +51,7 @@ const Home = () => {
 
   if (loading) {
     return (
+      
       <SafeAreaView className="flex-1">
         <ScrollView
           className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
@@ -77,46 +81,50 @@ const Home = () => {
               <Skeleton width={176} height={176} colorMode={skeletonColor} />
             </View>
           </View>
+        <StatusBar style={statusbarColor} />
         </ScrollView>
       </SafeAreaView>
     );
   }
 
-  return (
-    <SafeAreaView className="flex-1">
-      <ScrollView
-        className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
-        showsVerticalScrollIndicator={false}
-      >
-        <View className="flex h-16 w-full items-center justify-center py-2">
-          {theme === 'dark' ? (
-            <Image
-              source={require('../../assets/logo-white-side.png')}
-              className="h-full w-auto"
-              resizeMode="contain"
-            />
-          ) : (
-            <Image
-              source={require('../../assets/logo-black-side.png')}
-              className="h-full w-auto"
-              resizeMode="contain"
-            />
-          )}
-        </View>
-
-        <HomeInfoCard
-          name={username} // Dynamic username
-          card1text={`Books\navailable`}
-          card1no={availableCount.toString()}
-          card2no={borrowedCount.toString()}
-          card2text={`Books\nborrowed`}
-          isAdmin={true}
+return(    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+  <ScrollView
+    className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
+    showsVerticalScrollIndicator={false}
+  >
+    <View className="flex h-16 w-full items-center justify-center py-2">
+      {theme === 'dark' ? (
+        <Image
+          source={require('../../assets/logo-white-side.png')}
+          className="h-full w-auto"
+          resizeMode="contain"
         />
-        <HomeScroll title="Available books" goto="/(admin)/library" isBorrowed={false} isAdmin={true} />
-        <HomeScroll title="Borrowed books" goto="/(admin)/library" isBorrowed={true} isAdmin={true} />
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+      ) : (
+        <Image
+          source={require('../../assets/logo-black-side.png')}
+          className="h-full w-auto"
+          resizeMode="contain"
+        />
+      )}
+    </View>
+
+    <HomeInfoCard
+      name={username} // Dynamic username
+      card1text={`Books\navailable`}
+      card1no={availableCount.toString()}
+      card2no={borrowedCount.toString()}
+      card2text={`Books\nborrowed`}
+      isAdmin={true}
+    />
+    <HomeScroll title="Available books" goto="/(admin)/library" isBorrowed={false} isAdmin={true} />
+    <HomeScroll title="Borrowed books" goto="/(admin)/library" isBorrowed={true} isAdmin={true} />
+  </ScrollView>
+    <StatusBar style={statusbarColor} />
+</SafeAreaView> )
+
+} 
+
+    
+
 
 export default Home;

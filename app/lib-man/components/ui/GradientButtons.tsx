@@ -53,8 +53,9 @@ const GradientButton: React.FC<GradientButtonProps> = ({ id, onPress, disabled, 
   const button = buttonDataMap[id] || defaultButtonData;
   return (
     <Pressable onPress={onPress} className="overflow-hidden rounded-md">
-      <LinearGradient className="p-4" colors={button.colours}>
-        <Text className="rounded-lg text-green-50">{button.text}</Text>
+      {/* <LinearGradient className="p-4" colors={button.colours}> */}
+      <LinearGradient colors={button.colours}>
+        <Text className="rounded-lg text-green-50 p-4">{button.text}</Text>
       </LinearGradient>
     </Pressable>
   );

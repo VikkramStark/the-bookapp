@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "lib-man",
-    "slug": "lib-man",
+    "name": "lib-minds",
+    "slug": "lib-minds",
     "version": "1.0.0",
     "newArchEnabled": true,
     
-      "scheme": "lib-man",
+      "scheme": "lib-minds",
       "web": {
         "bundler": "metro",
         "output": "static",
@@ -18,7 +18,7 @@
         {
           "photosPermission": "The app accesses your photos to let you upload images if you login as admin"
         }
-      ],
+      ]
       ],
       
       "experiments": {

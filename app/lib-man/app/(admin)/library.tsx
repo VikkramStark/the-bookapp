@@ -1,4 +1,5 @@
-import { View, Text, ActivityIndicator, Image, ScrollView, Pressable ,SafeAreaView} from 'react-native';
+import { View, Text, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
@@ -9,6 +10,8 @@ import { Skeleton } from 'moti/skeleton';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import GradientButton from '~/components/ui/GradientButtons';
+import { StatusBar } from 'expo-status-bar';
+
 type Book = {
   id: string;
   imgUrl: string;
@@ -34,6 +37,7 @@ const Library = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
+  const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   useEffect(() => {
@@ -132,7 +136,7 @@ const Library = () => {
   }
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
 
@@ -265,7 +269,10 @@ const Library = () => {
           )}
         </BottomSheetView>
       </BottomSheet>
-    </GestureHandlerRootView></SafeAreaView>
+    </GestureHandlerRootView>
+          <StatusBar style={statusbarColor} />
+
+    </SafeAreaView>
   );
 };
 

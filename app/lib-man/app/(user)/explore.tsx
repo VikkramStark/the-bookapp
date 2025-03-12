@@ -1,4 +1,5 @@
-import { View, Text, Image, Pressable, ActivityIndicator ,SafeAreaView} from 'react-native'; 
+import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from '@shopify/flash-list';
@@ -161,7 +162,7 @@ const Explore = () => {
     return (
       <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
-        <View className="mx-2 flex h-16 w-full items-center justify-center py-2">
+        <View className=" flex h-16 w-full items-center justify-center py-2">
           {theme === 'dark' ? (
             <Image
               source={require('../../assets/logo-white-side.png')}

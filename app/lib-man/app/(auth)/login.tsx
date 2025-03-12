@@ -4,12 +4,8 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../../ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 const LoginScreen = () => {
-    const { theme } = useTheme();
-    const headingColor = theme === 'light' ? 'black' : 'white';
-    const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -77,7 +73,7 @@ const LoginScreen = () => {
     <KeyboardAvoidingView  className="mx-4 flex flex-1 justify-center gap-6" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Image
         source={require('../../assets/logo-black-updown.png')}
-        className="flex h-64 w-52 self-center object-cover object-center"
+        className="flex h-64 w-screen self-center object-contain object-center" resizeMode='contain'
       />
       <View className="gap-3">
         <TextInput
@@ -132,7 +128,7 @@ const LoginScreen = () => {
         </Link>
       </View>
     </KeyboardAvoidingView>
-          <StatusBar style={statusbarColor} />
+    <StatusBar style={'dark'} />
     </SafeAreaView>
   );
 };

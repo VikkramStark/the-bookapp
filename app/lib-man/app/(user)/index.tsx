@@ -1,4 +1,5 @@
-import { ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
+import { ScrollView, ActivityIndicator} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
@@ -11,7 +12,6 @@ import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
   const { theme } = useTheme();
-  const headingColor = theme === 'light' ? 'black' : 'white';
   const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const { user } = useAuth();
   const [borrowedCount, setBorrowedCount] = useState(0);
@@ -46,10 +46,10 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-          <View className="flex h-16 w-full items-center justify-center py-2 mt-4">
+          <View className="flex h-16 w-full items-center justify-center py-2 ">
             {theme === 'dark' ? (
               <Image
                 source={require('../../assets/logo-white-side.png')}
@@ -76,8 +76,8 @@ const Home = () => {
           <HomeScroll title="Owned books" goto="/(user)/books" isBorrowed={true} isAdmin={false} />
           <HomeScroll title="Wishlist" goto="/(user)/wishlist" isBorrowed={false} isAdmin={false} />
         </ScrollView>
-      </View>
       <StatusBar style={statusbarColor} />
+      </View>
     </SafeAreaView>
   );
 };

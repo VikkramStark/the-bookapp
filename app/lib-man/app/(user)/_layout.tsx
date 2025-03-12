@@ -1,12 +1,31 @@
 import { Tabs, router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect , useState} from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../constants/routes';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image } from 'react-native';
-
+import { auth, db } from '../../utils/firebase';
+import { View, Text } from 'react-native';
+import { doc, getDoc, collection, getDocs, updateDoc, setDoc } from 'firebase/firestore';
 export default function UserLayout() {
   const { user, loading } = useAuth();
+  const [username, setUsername] = useState<string>('');
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!auth.currentUser) return;
+
+      const userDocRef = doc(db, 'users', auth.currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists() && userDoc.data().name) {
+        setUsername(userDoc.data().username);
+      } else {
+        const emailPrefix = auth.currentUser.email?.split('@')[0] || 'Admin';
+        setUsername(emailPrefix);
+        await setDoc(userDocRef, { name: emailPrefix }, { merge: true });
+      }
+    };
+
+    fetchUsername();
+  }, []);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -22,8 +41,7 @@ export default function UserLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: 'black',
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
@@ -51,7 +69,7 @@ export default function UserLayout() {
       <Tabs.Screen
         name="wishlist"
         options={{
-          title: 'wishlist',
+          title: 'favourites',
           headerShown: false,
           tabBarIcon: ({ color }) => <Ionicons name="bookmark" size={24} color={color} />,
         }}
@@ -62,12 +80,11 @@ export default function UserLayout() {
           title: 'profile',
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <Image
-              className="h-6 w-6 rounded-full"
-              source={{
-                uri: 'https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ=',
-              }}
-            />
+            <View className="relative h-6 w-6 items-center justify-center rounded-full bg-gray-700">
+              <Text className="absolute font-bold text-white">
+                {username[0]?.toUpperCase() || 'A'}
+              </Text>
+            </View>
           ),
         }}
       />

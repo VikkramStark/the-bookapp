@@ -1,10 +1,12 @@
-import { View, Text, Image, Pressable, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, Image, Pressable, ActivityIndicator} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import GradientButton from '../../components/ui/GradientButtons';
 import { db } from '../../utils/firebase';
 import { collection, query, where, getDocs, doc, updateDoc, arrayUnion, arrayRemove, getDoc, Timestamp } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
+import { StatusBar } from 'expo-status-bar';
 
 type Request = {
   id: string;
@@ -34,6 +36,7 @@ const DetailsRow = ({ label, value }: { label: string; value: string }) => {
 const Inbox = () => {
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
+  const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -129,7 +132,7 @@ const Inbox = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         <View className="flex h-16 w-full items-center justify-center py-2">
           {theme === 'dark' ? (
@@ -194,6 +197,7 @@ const Inbox = () => {
           )}
         </View>
       </View>
+          <StatusBar style={statusbarColor} />
     </SafeAreaView>
   );
 };

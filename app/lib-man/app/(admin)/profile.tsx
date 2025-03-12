@@ -1,4 +1,5 @@
-import { View, Text, Switch, Image, Pressable, ActivityIndicator, ScrollView, SafeAreaView, TextInput } from 'react-native';
+import { View, Text, Switch, Image, Pressable, ActivityIndicator, ScrollView, TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { signOut } from 'firebase/auth';
@@ -7,6 +8,7 @@ import { useTheme } from '../../ThemeContext';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { doc, getDoc, collection, getDocs, updateDoc, setDoc } from 'firebase/firestore';
+import { StatusBar } from 'expo-status-bar';
 
 type User = {
   id: string;
@@ -17,6 +19,7 @@ type User = {
 
 const ProfileScreen = () => {
   const { theme, toggleTheme } = useTheme();
+    const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const [isEnabled, setIsEnabled] = useState(theme === 'dark');
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
@@ -173,7 +176,7 @@ const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         <View className="flex h-16 w-full items-center justify-center py-2">
           {theme === 'dark' ? (
@@ -371,6 +374,7 @@ const ProfileScreen = () => {
           </BottomSheetView>
         </BottomSheet>
       </GestureHandlerRootView>
+            <StatusBar style={statusbarColor} />
     </SafeAreaView>
   );
 };

@@ -1,4 +1,5 @@
-import { View, Text, Image, Pressable, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform ,SafeAreaView} from 'react-native';
+import { View, Text, Image, Pressable, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,9 +9,12 @@ import { ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useTheme } from '../../ThemeContext';
 import app from '../../utils/firebase';
+import { StatusBar } from 'expo-status-bar';
+
 const AddBooks = () => {
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
+  const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const [image, setImage] = useState<string | null>(null);
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
@@ -102,8 +106,7 @@ const AddBooks = () => {
   };
 
   return (
-      <SafeAreaView className='flex-1'>
-
+      <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
     <KeyboardAvoidingView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View className="flex h-16 w-full items-center justify-center py-2">
                 {theme === 'dark' ? (
@@ -210,6 +213,7 @@ className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white plac
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
+        <StatusBar style={statusbarColor} />
     </SafeAreaView>
   );
 };
