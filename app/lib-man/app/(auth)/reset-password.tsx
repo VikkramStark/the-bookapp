@@ -5,7 +5,7 @@ import { Pressable, TextInput } from 'react-native';
 
 const ResetPasswordScreen = () => {
   return (
-    <SafeAreaView>
+      <SafeAreaView className='flex-1'>
     <KeyboardAvoidingView className="mx-4 flex flex-1 justify-center gap-6">
       <Image
         source={require('../../assets/logo-black-updown.png')}

@@ -24,7 +24,7 @@ export default  function ForgotPasswordScreen() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className='flex-1'>
     <KeyboardAvoidingView className="mx-4 flex flex-1 justify-center gap-6">
       <Image source={require('../../assets/logo-black-updown.png')} className="flex h-64 w-52 self-center" />
       <Text className="font-bold text-xl">Find your account</Text>

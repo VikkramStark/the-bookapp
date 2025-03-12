@@ -102,7 +102,7 @@ const AddBooks = () => {
   };
 
   return (
-    <SafeAreaView>
+      <SafeAreaView className='flex-1'>
 
     <KeyboardAvoidingView className={`flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View className="flex h-16 w-full items-center justify-center py-2">

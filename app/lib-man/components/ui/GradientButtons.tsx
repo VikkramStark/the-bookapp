@@ -5,10 +5,12 @@ import { COLORS } from '../../constants/colors';
 
 type ButtonId = 'penalty' | 'available' | 'borrowed' | 'Accept' | 'Decline'|'Return'|'Borrow';
 
-type GradientButtonProps = {
+interface GradientButtonProps {
   id: ButtonId;
-  onPress?: () => void; // Add optional onPress prop
-};
+  onPress?: () => void;
+  disabled?: boolean;
+  children?: React.ReactNode; // Add children prop
+}
 
 const buttonDataMap: Record<ButtonId, { colours: readonly [string, string, string]; text: string }> = {
   penalty: {
@@ -47,7 +49,7 @@ const defaultButtonData = {
   text: 'Unknown',
 };
 
-const GradientButton = ({ id, onPress }: GradientButtonProps) => {
+const GradientButton: React.FC<GradientButtonProps> = ({ id, onPress, disabled, children }) => {
   const button = buttonDataMap[id] || defaultButtonData;
   return (
     <Pressable onPress={onPress} className="overflow-hidden rounded-md">

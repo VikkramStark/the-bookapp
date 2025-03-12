@@ -77,7 +77,7 @@ const SignUpScreen = () => {
   };
 
   return (
-    <SafeAreaView>
+      <SafeAreaView className='flex-1'>
     <KeyboardAvoidingView
       className="mx-4 flex flex-1 justify-center gap-6"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

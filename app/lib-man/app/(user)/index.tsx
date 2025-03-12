@@ -7,14 +7,18 @@ import { db } from '../../utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
 import { View, Image } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
+  const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const { user } = useAuth();
   const [borrowedCount, setBorrowedCount] = useState(0);
   const [penaltyFee, setPenaltyFee] = useState(0);
+  const [username, setUsername] = useState<string>(''); // Add username state
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) return;
@@ -25,6 +29,8 @@ const Home = () => {
         const userData = userDoc.data();
         setBorrowedCount(userData?.borrowedBooks?.length || 0);
         setPenaltyFee(userData?.penaltyFee || 0);
+        // Set username from Firestore, fallback to email prefix if not set
+        setUsername(userData?.username || user?.email?.split('@')[0] || 'User');
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {
@@ -43,7 +49,7 @@ const Home = () => {
     <SafeAreaView className="flex-1">
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-          <View className="flex h-16 w-full items-center justify-center py-2">
+          <View className="flex h-16 w-full items-center justify-center py-2 mt-4">
             {theme === 'dark' ? (
               <Image
                 source={require('../../assets/logo-white-side.png')}
@@ -60,7 +66,7 @@ const Home = () => {
           </View>
 
           <HomeInfoCard
-            name={user?.displayName || user?.email?.split('@')[0] || 'User'}
+            name={username} // Use fetched username
             card1text={`Books\nborrowed`}
             card1no={borrowedCount.toString()}
             card2no={penaltyFee.toString()}
@@ -71,6 +77,7 @@ const Home = () => {
           <HomeScroll title="Wishlist" goto="/(user)/wishlist" isBorrowed={false} isAdmin={false} />
         </ScrollView>
       </View>
+      <StatusBar style={statusbarColor} />
     </SafeAreaView>
   );
 };

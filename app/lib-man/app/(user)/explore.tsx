@@ -301,8 +301,8 @@ const Explore = () => {
                     {selectedBook.edition}
                   </Text>
                 </Text>
-                <Text className="text-md mt-2" style={{ color: headingColor }} numberOfLines={3}
-  ellipsizeMode="tail">
+                  <Text className="text-md mt-2" style={{ color: headingColor }} numberOfLines={3}
+    ellipsizeMode="tail">
                   Description: <Text
 
                     style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>

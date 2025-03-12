@@ -94,7 +94,7 @@ const Library = () => {
 
   if (loading) {
     return (
-      <SafeAreaView>
+      <SafeAreaView className='flex-1'>
 
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'} `}>
         <View className="flex h-16 w-full items-center justify-center py-2 mx-2">
@@ -132,7 +132,7 @@ const Library = () => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className='flex-1'>
     <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
 
@@ -228,7 +228,8 @@ const Library = () => {
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
                   Edition: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.edition}</Text>
                 </Text>
-                <Text className="text-md mt-2" style={{ color: headingColor }}>
+                <Text className="text-md mt-2" style={{ color: headingColor }} numberOfLines={3}
+  ellipsizeMode="tail">
                   Description: <Text style={{ color: theme === 'dark' ? '#D1D5DB' : '#6B7280' }}>{selectedBook.description}</Text>
                 </Text>
                 <Text className="text-md mt-2" style={{ color: headingColor }}>
