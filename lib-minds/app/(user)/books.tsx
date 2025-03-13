@@ -324,7 +324,7 @@ const Books = () => {
                   </Pressable>
                 </View>
 
-                <View className="my-6 flex items-center">
+                <View className="my-6 flex-1 items-center">
                   {requestSent ? (
                     <Pressable disabled={true} className="p-2 rounded-lg bg-gray-400">
                       <Text className="text-white text-center">Return Request Sent</Text>

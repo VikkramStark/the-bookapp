@@ -198,7 +198,7 @@ const Library = () => {
           backgroundColor: theme === 'dark' ? '#1F2937' : '#FFFFFF',
         }}
       >
-        <BottomSheetView style={{ flex: 1, padding: 16 }}>
+        <BottomSheetView style={{ flex: 1, padding: 16 }} className='flex-1'>
           {selectedBook ? (
             <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
               <Image
@@ -218,7 +218,7 @@ const Library = () => {
               >
                 by {selectedBook.author}
               </Text>
-              <View className="mt-4">
+              <View className="mt-4 flex-1">
                 <Text className="text-md items-center" style={{ color: headingColor }}>
                   <GradientButton id={selectedBook.bookStatus}/> </Text>
                 

@@ -84,6 +84,7 @@ const SignUpScreen = () => {
       <Image
         source={require('../../assets/logo-black-updown.png')}
         className="flex h-64 w-52 self-center object-cover object-center"
+        resizeMode='contain'
       />
       <View className="gap-3">
         <TextInput
