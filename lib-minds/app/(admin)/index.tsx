@@ -1,4 +1,4 @@
-import { ScrollView, ActivityIndicator, View, Image,Platform} from 'react-native';
+import { ScrollView, ActivityIndicator, View, Image, Platform, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeScroll from '../../components/layout/HomeScroll';
@@ -7,53 +7,72 @@ import { db } from '../../utils/firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
 import { Skeleton } from 'moti/skeleton';
-import { useAuth } from '../../hooks/useAuth'; 
+import { useAuth } from '../../hooks/useAuth';
 import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
   const statusbarColor = theme === 'light' ? 'dark' : 'light';
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [availableCount, setAvailableCount] = useState(0);
   const [borrowedCount, setBorrowedCount] = useState(0);
-  const [username, setUsername] = useState<string>(''); 
+  const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const skeletonColor = theme === 'dark' ? 'light' : 'dark';
 
+  const fetchData = async (isRefreshing = false) => {
+    if (!user) return;
+
+    if (!isRefreshing) setLoading(true);
+    try {
+      const availableQuery = query(collection(db, 'books'), where('status', '==', 'available'));
+      const borrowedQuery = query(collection(db, 'books'), where('status', '==', 'borrowed'));
+      const availableSnapshot = await getDocs(availableQuery);
+      const borrowedSnapshot = await getDocs(borrowedQuery);
+      setAvailableCount(availableSnapshot.size);
+      setBorrowedCount(borrowedSnapshot.size);
+
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userData = userDoc.data();
+      setUsername(userData?.name || user?.email?.split('@')[0] || 'Admin');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      if (!isRefreshing) setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
-
-      setLoading(true);
-      try {
-        const availableQuery = query(collection(db, 'books'), where('status', '==', 'available'));
-        const borrowedQuery = query(collection(db, 'books'), where('status', '==', 'borrowed'));
-        const availableSnapshot = await getDocs(availableQuery);
-        const borrowedSnapshot = await getDocs(borrowedQuery);
-        setAvailableCount(availableSnapshot.size);
-        setBorrowedCount(borrowedSnapshot.size);
-        
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const userData = userDoc.data();
-        setUsername(userData?.name || user?.email?.split('@')[0] || 'Admin');
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [user]);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchData(true);
+      // HomeScroll components will also refetch their data via their own fetchBooks calls
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   if (loading) {
     return (
-      
       <SafeAreaView className="flex-1">
         <ScrollView
           className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={headingColor}
+            />
+          }
         >
           <View className="flex h-16 w-full items-center justify-center py-2">
             {theme === 'dark' ? (
@@ -79,50 +98,71 @@ const Home = () => {
               <Skeleton width={176} height={176} colorMode={skeletonColor} />
             </View>
           </View>
-        <StatusBar style={statusbarColor} />
+          <StatusBar style={statusbarColor} />
         </ScrollView>
       </SafeAreaView>
     );
   }
 
-return(    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-  <ScrollView
-    className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
-    showsVerticalScrollIndicator={false}
-  >
-    <View className="flex h-16 w-full items-center justify-center py-2">
-      {theme === 'dark' ? (
-        <Image
-          source={require('../../assets/logo-white-side.png')}
-          className="h-full w-auto"
-          resizeMode="contain"
+  return (
+    <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+      <ScrollView
+        className={`${theme === 'dark' ? 'bg-black' : 'bg-white'}`}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={headingColor}
+          />
+        }
+      >
+        <View className="flex h-16 w-full items-center justify-center py-2">
+          {theme === 'dark' ? (
+            <Image
+              source={require('../../assets/logo-white-side.png')}
+              className="h-full w-auto"
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={require('../../assets/logo-black-side.png')}
+              className="h-full w-auto"
+              resizeMode="contain"
+            />
+          )}
+        </View>
+
+        <HomeInfoCard
+          name={username}
+          card1text={`Books\navailable`}
+          card1no={availableCount.toString()}
+          card2no={borrowedCount.toString()}
+          card2text={`Books\nborrowed`}
+          isAdmin={true}
         />
-      ) : (
-        <Image
-          source={require('../../assets/logo-black-side.png')}
-          className="h-full w-auto"
-          resizeMode="contain"
+        <HomeScroll
+          title="Available books"
+          goto="/(admin)/library"
+          isBorrowed={false}
+          isAdmin={true}
+          userId={user?.uid || null}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
-      )}
-    </View>
-
-    <HomeInfoCard
-      name={username} 
-      card1text={`Books\navailable`}
-      card1no={availableCount.toString()}
-      card2no={borrowedCount.toString()}
-      card2text={`Books\nborrowed`}
-      isAdmin={true}
-    />
-    <HomeScroll title="Available books" goto="/(admin)/library" isBorrowed={false} isAdmin={true} />
-    <HomeScroll title="Borrowed books" goto="/(admin)/library" isBorrowed={true} isAdmin={true} />
-  </ScrollView>
-    <StatusBar style={statusbarColor} />
-</SafeAreaView> )
-
-} 
-
-    
-
+        <HomeScroll
+          title="Borrowed books"
+          goto="/(admin)/library"
+          isBorrowed={true}
+          isAdmin={true}
+          userId={user?.uid || null}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      </ScrollView>
+      <StatusBar style={statusbarColor} />
+    </SafeAreaView>
+  );
+};
 
 export default Home;

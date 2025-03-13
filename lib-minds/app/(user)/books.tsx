@@ -11,7 +11,7 @@ import { Skeleton } from 'moti/skeleton';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BookCard from '../../components/ui/BookCard';
 import GradientButton from '../../components/ui/GradientButtons';
-
+import { RefreshControl } from 'react-native';
 type Book = {
   id: string;
   imgUrl: string;
@@ -39,51 +39,56 @@ const Books = () => {
   const [requestSent, setRequestSent] = useState(false);
   const [isDamaged, setIsDamaged] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  useEffect(() => {
-    const fetchBorrowedBooks = async () => {
-      if (!user) return;
-
-      setLoading(true);
-      try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const borrowedBookIds = userDoc.data()?.borrowedBooks || [];
-
-        if (borrowedBookIds.length === 0) {
-          setBooks([]);
-          setLoading(false);
-          return;
-        }
-
-        const booksQuery = query(collection(db, 'books'), where('__name__', 'in', borrowedBookIds));
-        const booksSnapshot = await getDocs(booksQuery);
-        const booksData = booksSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          imgUrl: doc.data().imgUrl || '',
-          returnDays: doc.data().returnDays || 0,
-          title: doc.data().title || 'Unknown Title',
-          author: doc.data().author || 'Unknown Author',
-          isbn: doc.data().isbn || 'N/A',
-          category: doc.data().category || 'N/A',
-          edition: doc.data().edition || 'N/A',
-          description: doc.data().description || 'No description available',
-          publisher: doc.data().publisher || 'N/A',
-          language: doc.data().language || 'N/A',
-          quantity: doc.data().quantity || 1,
-          maxBorrowDays: doc.data().maxBorrowDays || 14,
-        }));
-
-        setBooks(booksData);
-      } catch (error) {
-        console.error('Error fetching borrowed books:', error);
-      } finally {
-        setLoading(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const fetchBorrowedBooks = async (isRefreshing = false) => {
+    if (!user) return;
+    if (!isRefreshing) setLoading(true);
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const borrowedBookIds = userDoc.data()?.borrowedBooks || [];
+      if (borrowedBookIds.length === 0) {
+        setBooks([]);
+        if (!isRefreshing) setLoading(false);
+        return;
       }
-    };
-
+      const booksQuery = query(collection(db, 'books'), where('__name__', 'in', borrowedBookIds));
+      const booksSnapshot = await getDocs(booksQuery);
+      const booksData = booksSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        imgUrl: doc.data().imgUrl || '',
+        returnDays: doc.data().returnDays || 0,
+        title: doc.data().title || 'Unknown Title',
+        author: doc.data().author || 'Unknown Author',
+        isbn: doc.data().isbn || 'N/A',
+        category: doc.data().category || 'N/A',
+        edition: doc.data().edition || 'N/A',
+        description: doc.data().description || 'No description available',
+        publisher: doc.data().publisher || 'N/A',
+        language: doc.data().language || 'N/A',
+        quantity: doc.data().quantity || 1,
+        maxBorrowDays: doc.data().maxBorrowDays || 14,
+      }));
+      setBooks(booksData);
+    } catch (error) {
+      console.error('Error fetching borrowed books:', error);
+    } finally {
+      if (!isRefreshing) setLoading(false);
+    }
+  };
+  useEffect(() => {
+   
     fetchBorrowedBooks();
   }, [user]);
-
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchBorrowedBooks(true);
+    } catch (error) {
+      console.error('Error refreshing borrowed books:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
   const handleBookPress = async (book: Book) => {
     setSelectedBook(book);
     setIsReturning(false);
@@ -202,23 +207,30 @@ const Books = () => {
             </Text>
           ) : (
             <FlashList
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-              estimatedItemSize={5}
-              data={books}
-              renderItem={({ item }) => (
-                <Pressable onPress={() => handleBookPress(item)}>
-                  <BookCard
-                    days={item.returnDays.toString()}
-                    isReturn={true}
-                    imgUrl={item.imgUrl}
-                    height="64"
-                    width="48"
-                    isadmin={false}
-                  />
-                </Pressable>
-              )}
-            />
+  numColumns={2}
+  showsVerticalScrollIndicator={false}
+  estimatedItemSize={5}
+  data={books}
+  renderItem={({ item }) => (
+    <Pressable onPress={() => handleBookPress(item)}>
+      <BookCard
+        days={item.returnDays.toString()}
+        isReturn={true}
+        imgUrl={item.imgUrl}
+        height="64"
+        width="48"
+        isadmin={false}
+      />
+    </Pressable>
+  )}
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      tintColor={headingColor}
+    />
+  }
+/>
           )}
         </View>
 

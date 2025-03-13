@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ActivityIndicator} from 'react-native';
+import { View, Text, Image, Pressable, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
@@ -19,7 +19,7 @@ type Request = {
   status: 'pending' | 'accepted' | 'declined';
   requestType: 'borrow' | 'return';
   imgUrl: string;
-  isDamaged: boolean; 
+  isDamaged: boolean;
 };
 
 const DetailsRow = ({ label, value }: { label: string; value: string }) => {
@@ -39,44 +39,56 @@ const Inbox = () => {
   const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchRequests = async (isRefreshing = false) => {
+    if (!isRefreshing) setLoading(true);
+    try {
+      const requestsQuery = query(collection(db, 'requests'), where('status', '==', 'pending'));
+      const requestsSnapshot = await getDocs(requestsQuery);
+
+      const requestsData = await Promise.all(
+        requestsSnapshot.docs.map(async (requestDoc) => {
+          const requestData = requestDoc.data();
+          const bookDoc = await getDoc(doc(db, 'books', requestData.bookId));
+          return {
+            id: requestDoc.id,
+            bookId: requestData.bookId,
+            userId: requestData.userId,
+            isbn: requestData.isbn,
+            title: requestData.title,
+            author: requestData.author,
+            borrowDays: requestData.borrowDays,
+            status: requestData.status,
+            requestType: requestData.requestType || 'borrow',
+            imgUrl: bookDoc.exists() ? bookDoc.data().imgUrl : '',
+            isDamaged: requestData.isDamaged || false,
+          };
+        })
+      );
+
+      setRequests(requestsData);
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+    } finally {
+      if (!isRefreshing) setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchRequests = async () => {
-      setLoading(true);
-      try {
-        const requestsQuery = query(collection(db, 'requests'), where('status', '==', 'pending'));
-        const requestsSnapshot = await getDocs(requestsQuery);
-
-        const requestsData = await Promise.all(
-          requestsSnapshot.docs.map(async (requestDoc) => {
-            const requestData = requestDoc.data();
-            const bookDoc = await getDoc(doc(db, 'books', requestData.bookId));
-            return {
-              id: requestDoc.id,
-              bookId: requestData.bookId,
-              userId: requestData.userId,
-              isbn: requestData.isbn,
-              title: requestData.title,
-              author: requestData.author,
-              borrowDays: requestData.borrowDays,
-              status: requestData.status,
-              requestType: requestData.requestType || 'borrow',
-              imgUrl: bookDoc.exists() ? bookDoc.data().imgUrl : '',
-              isDamaged: requestData.isDamaged || false, 
-            };
-          })
-        );
-
-        setRequests(requestsData);
-      } catch (error) {
-        console.error('Error fetching requests:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchRequests();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchRequests(true);
+    } catch (error) {
+      console.error('Error refreshing requests:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handleAccept = async (request: Request) => {
     try {
@@ -99,7 +111,7 @@ const Inbox = () => {
           borrowedAt: null,
           returnDays: 0,
           returnDate: null,
-          ...(request.isDamaged && { condition: 'damaged' }), 
+          ...(request.isDamaged && { condition: 'damaged' }),
         });
         await updateDoc(doc(db, 'users', request.userId), {
           borrowedBooks: arrayRemove(request.bookId),
@@ -155,16 +167,28 @@ const Inbox = () => {
             Inbox
           </Text>
           {requests.length === 0 ? (
-            <View className="flex h-80 justify-center items-center w-full">
-              <Image
-                source={require('../../assets/request.png')}
-                className="h-full w-auto"
-                resizeMode="contain"
-              />
-              <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
-                No pending requests.
-              </Text>
-            </View>
+            <ScrollView
+              className="flex-1"
+              contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={headingColor}
+                />
+              }
+            >
+              <View className="flex h-80 justify-center items-center w-full">
+                <Image
+                  source={require('../../assets/request.png')}
+                  className="h-full w-auto"
+                  resizeMode="contain"
+                />
+                <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
+                  No pending requests.
+                </Text>
+              </View>
+            </ScrollView>
           ) : (
             <FlashList
               estimatedItemSize={4}
@@ -193,11 +217,18 @@ const Inbox = () => {
                   </View>
                 </View>
               )}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={headingColor}
+                />
+              }
             />
           )}
         </View>
       </View>
-          <StatusBar style={statusbarColor} />
+      <StatusBar style={statusbarColor} />
     </SafeAreaView>
   );
 };

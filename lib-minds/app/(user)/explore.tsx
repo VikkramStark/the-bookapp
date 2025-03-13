@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, Image, Pressable, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -49,51 +49,63 @@ const Explore = () => {
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const progress = useSharedValue(1);
   const min = useSharedValue(1);
   const max = useSharedValue(14);
 
+  const fetchAvailableBooks = async (isRefreshing = false) => {
+    if (!user) return;
+
+    if (!isRefreshing) setLoading(true);
+    try {
+      const booksQuery = query(collection(db, 'books'), where('status', '==', 'available'));
+      const booksSnapshot = await getDocs(booksQuery);
+
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const wishlist = userDoc.data()?.wishlist || [];
+
+      const booksData = booksSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        imgUrl: doc.data().imgUrl || '',
+        title: doc.data().title || 'Unknown Title',
+        author: doc.data().author || 'Unknown Author',
+        isbn: doc.data().isbn || 'N/A',
+        status: doc.data().status,
+        isInWishlist: wishlist.includes(doc.id),
+        category: doc.data().category || 'N/A',
+        edition: doc.data().edition || 'N/A',
+        description: doc.data().description || 'No description available',
+        publisher: doc.data().publisher || 'N/A',
+        language: doc.data().language || 'N/A',
+        maxBorrowDays: doc.data().maxBorrowDays || 0,
+        returnDays: doc.data().returnDays || 0,
+      }));
+
+      setBooks(booksData);
+    } catch (error) {
+      console.error('Error fetching available books:', error);
+    } finally {
+      if (!isRefreshing) setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchAvailableBooks = async () => {
-      if (!user) return;
-
-      setLoading(true);
-      try {
-        const booksQuery = query(collection(db, 'books'), where('status', '==', 'available'));
-        const booksSnapshot = await getDocs(booksQuery);
-
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const wishlist = userDoc.data()?.wishlist || [];
-
-        const booksData = booksSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          imgUrl: doc.data().imgUrl || '',
-          title: doc.data().title || 'Unknown Title',
-          author: doc.data().author || 'Unknown Author',
-          isbn: doc.data().isbn || 'N/A',
-          status: doc.data().status,
-          isInWishlist: wishlist.includes(doc.id),
-          category: doc.data().category || 'N/A',
-          edition: doc.data().edition || 'N/A',
-          description: doc.data().description || 'No description available',
-          publisher: doc.data().publisher || 'N/A',
-          language: doc.data().language || 'N/A',
-          maxBorrowDays: doc.data().maxBorrowDays || 0,
-          returnDays: doc.data().returnDays || 0,
-        }));
-
-        setBooks(booksData);
-      } catch (error) {
-        console.error('Error fetching available books:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAvailableBooks();
   }, [user]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchAvailableBooks(true);
+    } catch (error) {
+      console.error('Error refreshing available books:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handleBorrowPress = (book: Book) => {
     setSelectedBook({ ...book, returnDays: book.maxBorrowDays });
@@ -219,9 +231,21 @@ const Explore = () => {
             Available books
           </Text>
           {books.length === 0 ? (
-            <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
-              No available books.
-            </Text>
+            <ScrollView
+              className="flex-1"
+              contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={headingColor}
+                />
+              }
+            >
+              <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
+                No available books.
+              </Text>
+            </ScrollView>
           ) : (
             <FlashList
               estimatedItemSize={6}
@@ -240,7 +264,8 @@ const Explore = () => {
                     <View className="absolute end-0 flex h-full justify-between">
                       <Pressable
                         onPress={() => toggleWishlist(item)}
-                        className="m-2 self-end rounded-full bg-white p-2">
+                        className="m-2 self-end rounded-full bg-white p-2"
+                      >
                         <Ionicons
                           name={item.isInWishlist ? 'heart' : 'heart-outline'}
                           size={24}
@@ -249,13 +274,21 @@ const Explore = () => {
                       </Pressable>
                       <Pressable
                         onPress={() => handleBorrowPress(item)}
-                        className="m-2 rounded-lg border-2 border-black bg-white p-3">
+                        className="m-2 rounded-lg border-2 border-black bg-white p-3"
+                      >
                         <Text>Borrow</Text>
                       </Pressable>
                     </View>
                   </View>
                 </View>
               )}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={headingColor}
+                />
+              }
             />
           )}
         </View>
@@ -334,7 +367,6 @@ const Explore = () => {
                   </Text>
                 </View>
 
-                {/* Slider for Borrow Days */}
                 <View className="mt-6">
                   <Text className="text-md font-semibold" style={{ color: headingColor }}>
                     Borrow for: {selectedBook.returnDays ?? 'N/A'} days

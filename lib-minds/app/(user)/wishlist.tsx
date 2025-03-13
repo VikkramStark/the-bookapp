@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, Image} from 'react-native';
+import { View, Text, ActivityIndicator, Image, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import BookCard from '../../components/ui/BookCard';
@@ -39,6 +39,7 @@ const Wishlist = () => {
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -46,49 +47,60 @@ const Wishlist = () => {
   const min = useSharedValue(1);
   const max = useSharedValue(14);
 
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      if (!user) return;
+  const fetchWishlist = async (isRefreshing = false) => {
+    if (!user) return;
 
-      setLoading(true);
-      try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const wishlistBookIds = userDoc.data()?.wishlist || [];
+    if (!isRefreshing) setLoading(true);
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const wishlistBookIds = userDoc.data()?.wishlist || [];
 
-        if (wishlistBookIds.length === 0) {
-          setBooks([]);
-          setLoading(false);
-          return;
-        }
-
-        const booksQuery = query(collection(db, 'books'), where('__name__', 'in', wishlistBookIds));
-        const booksSnapshot = await getDocs(booksQuery);
-        const booksData = booksSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          imgUrl: doc.data().imgUrl || '',
-          title: doc.data().title || 'Unknown Title',
-          author: doc.data().author || 'Unknown Author',
-          isbn: doc.data().isbn || 'N/A',
-          status: doc.data().status || 'available',
-          category: doc.data().category || 'N/A',
-          edition: doc.data().edition || 'N/A',
-          description: doc.data().description || 'No description available',
-          publisher: doc.data().publisher || 'N/A',
-          language: doc.data().language || 'N/A',
-          maxBorrowDays: doc.data().maxBorrowDays || 0,
-          returnDays: doc.data().returnDays || 0,
-        }));
-
-        setBooks(booksData);
-      } catch (error) {
-        console.error('Error fetching wishlist:', error);
-      } finally {
-        setLoading(false);
+      if (wishlistBookIds.length === 0) {
+        setBooks([]);
+        if (!isRefreshing) setLoading(false);
+        return;
       }
-    };
 
+      const booksQuery = query(collection(db, 'books'), where('__name__', 'in', wishlistBookIds));
+      const booksSnapshot = await getDocs(booksQuery);
+      const booksData = booksSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        imgUrl: doc.data().imgUrl || '',
+        title: doc.data().title || 'Unknown Title',
+        author: doc.data().author || 'Unknown Author',
+        isbn: doc.data().isbn || 'N/A',
+        status: doc.data().status || 'available',
+        category: doc.data().category || 'N/A',
+        edition: doc.data().edition || 'N/A',
+        description: doc.data().description || 'No description available',
+        publisher: doc.data().publisher || 'N/A',
+        language: doc.data().language || 'N/A',
+        maxBorrowDays: doc.data().maxBorrowDays || 0,
+        returnDays: doc.data().returnDays || 0,
+      }));
+
+      setBooks(booksData);
+    } catch (error) {
+      console.error('Error fetching wishlist:', error);
+    } finally {
+      if (!isRefreshing) setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchWishlist();
   }, [user]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchWishlist(true);
+    } catch (error) {
+      console.error('Error refreshing wishlist:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handleBorrowPress = (book: Book) => {
     setSelectedBook({ ...book, returnDays: book.maxBorrowDays });
@@ -196,9 +208,21 @@ const Wishlist = () => {
             Favourites
           </Text>
           {books.length === 0 ? (
-            <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
-              Your Favourites are empty.
-            </Text>
+            <ScrollView
+              className="flex-1"
+              contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={headingColor}
+                />
+              }
+            >
+              <Text className="mt-4 text-center text-lg" style={{ color: headingColor }}>
+                Your Favourites are empty.
+              </Text>
+            </ScrollView>
           ) : (
             <FlashList
               showsVerticalScrollIndicator={false}
@@ -218,6 +242,13 @@ const Wishlist = () => {
                   }
                 />
               )}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={headingColor}
+                />
+              }
             />
           )}
         </View>
