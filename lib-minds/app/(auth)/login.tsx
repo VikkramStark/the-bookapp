@@ -117,13 +117,13 @@ const LoginScreen = () => {
           {loading ? <ActivityIndicator color="#000000" /> : <Text className="font-bold">Login</Text>}
         </Pressable>
         <Link href={'/signup'} asChild>
-          <Pressable className="flex items-center rounded-full border-2 border-amber-500 p-4">
-            <Text className="font-semibold text-amber-500">Create new account</Text>
+          <Pressable className="flex items-center rounded-full border-2 border-[#1A9AAF] p-4">
+            <Text className="font-semibold text-[#1A9AAF]">Create new account</Text>
           </Pressable>
         </Link>
         <Link href={'/forgot-password'} asChild>
           <Pressable className="flex items-center p-4 underline">
-            <Text className="font-bold text-amber-500 underline">Forgot password?</Text>
+            <Text className="font-bold text-[#1A9AAF] underline">Forgot password?</Text>
           </Pressable>
         </Link>
       </View>

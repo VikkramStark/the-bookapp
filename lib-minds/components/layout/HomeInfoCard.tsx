@@ -52,7 +52,7 @@ const HomeInfoCard = ({ name, card1text, card1no, card2text, card2no, isAdmin }:
             <Link href="/(user)/wishlist" asChild>
               <Pressable className={`mt-2 flex items-center justify-center rounded-md  p-4 ${theme === 'dark' ? 'bg-[#0e0e0e]' : 'bg-white'}`} >
                 
-                <Text               className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-[#0e0e0e]'}`} > View history</Text>
+                <Text               className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-[#0e0e0e]'}`} > View favourites</Text>
               </Pressable>
             </Link>
           )}

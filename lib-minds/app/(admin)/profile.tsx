@@ -211,7 +211,7 @@ const ProfileScreen = () => {
                 </View>
                 <View>
                   <Text className="text-xl font-semibold">{username}</Text>
-                  <Text className="text-neutral-500">Edit profile</Text>
+                  <Text className="text-neutral-200">Edit profile</Text>
                 </View>
               </View>
               {profileLoading ? (

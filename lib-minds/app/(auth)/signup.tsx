@@ -129,7 +129,7 @@ const SignUpScreen = () => {
         </Pressable>
         <Link href={'/login'} asChild>
           <Pressable className="flex items-center p-4 underline">
-            <Text className="font-bold text-amber-500 underline">Already have an account? Log in</Text>
+            <Text className="font-bold text-[#1A9AAF] underline">Already have an account? Log in</Text>
           </Pressable>
         </Link>
       </View>

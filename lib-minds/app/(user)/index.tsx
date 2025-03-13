@@ -15,7 +15,7 @@ const Home = () => {
   const statusbarColor = theme === 'light' ? 'dark' : 'light';
   const { user } = useAuth();
   const [borrowedCount, setBorrowedCount] = useState(0);
-  const [penaltyFee, setPenaltyFee] = useState(0);
+  const [wishlistcount, setWishlistCount] = useState(0);
   const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +28,7 @@ const Home = () => {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         const userData = userDoc.data();
         setBorrowedCount(userData?.borrowedBooks?.length || 0);
-        setPenaltyFee(userData?.penaltyFee || 0);
+        setWishlistCount(userData?.wishlist?.length || 0);
         setUsername(userData?.username || user?.email?.split('@')[0] || 'User');
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -68,8 +68,8 @@ const Home = () => {
             name={username}
             card1text={`Books\nborrowed`}
             card1no={borrowedCount.toString()}
-            card2no={penaltyFee.toString()}
-            card2text={`Penalty\nfee`}
+            card2no={wishlistcount.toString()}
+            card2text={`Favourite\nBooks`}
             isAdmin={false}
           />
           <HomeScroll title="Owned books" goto="/(user)/books" isBorrowed={true} isAdmin={false} />
