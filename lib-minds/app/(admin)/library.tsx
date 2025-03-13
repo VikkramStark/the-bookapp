@@ -7,11 +7,11 @@ import { db } from '../../utils/firebase';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { useTheme } from '../../ThemeContext';
 import { Skeleton } from 'moti/skeleton';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView, BottomSheetScrollView, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import GradientButton from '~/components/ui/GradientButtons';
 import { StatusBar } from 'expo-status-bar';
-
+import BottomSheetModal from '@gorhom/bottom-sheet';
 type Book = {
   id: string;
   imgUrl: string;
@@ -137,7 +137,8 @@ const Library = () => {
 
   return (
     <SafeAreaView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-    <GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+
+<GestureHandlerRootView className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <View className={`flex flex-1 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
 
       <View className="flex h-16 w-full items-center justify-center py-2">
@@ -188,8 +189,8 @@ const Library = () => {
         )}
       </View>
       </View>
-
-      <BottomSheet
+      <BottomSheetModalProvider>
+      <BottomSheetModal 
         ref={bottomSheetRef}
         index={-1} 
         snapPoints={['50%', '90%']}
@@ -197,10 +198,11 @@ const Library = () => {
         backgroundStyle={{
           backgroundColor: theme === 'dark' ? '#1F2937' : '#FFFFFF',
         }}
-      >
+        enableContentPanningGesture={false}>
+      
         <BottomSheetView style={{ flex: 1, padding: 16 }} className='flex-1'>
           {selectedBook ? (
-            <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
+            <BottomSheetScrollView showsVerticalScrollIndicator={false} className='flex-1'>
               <Image
                 source={{ uri: selectedBook.imgUrl }}
                 className="h-48 w-32 self-center rounded-lg"
@@ -262,12 +264,13 @@ const Library = () => {
                   </>
                 )}
               </View>
-            </ScrollView>
+            </BottomSheetScrollView>
           ) : (
             <Text>No book selected</Text>
           )}
         </BottomSheetView>
-      </BottomSheet>
+      </BottomSheetModal>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
           <StatusBar style={statusbarColor} />
 

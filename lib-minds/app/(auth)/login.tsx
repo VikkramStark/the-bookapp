@@ -110,7 +110,7 @@ const LoginScreen = () => {
       {error && <Text className="text-red-500 px-2 font-semibold">{errorMessage}</Text>}
       <View className="gap-3">
         <Pressable
-          className="border- flex items-center rounded-full border-2 border-black bg-amber-400 p-4"
+          className="border- flex items-center rounded-full border-2 border-black bg-[#1A9AAF] p-4"
           onPress={handleLogin}
           disabled={loading}
         >

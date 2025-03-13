@@ -20,7 +20,7 @@ import {
   Timestamp,
   arrayRemove,
 } from 'firebase/firestore';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import GradientButton from '../../components/ui/GradientButtons';
 import { Slider } from 'react-native-awesome-slider';
@@ -267,7 +267,7 @@ const Explore = () => {
           backgroundStyle={{
             backgroundColor: theme === 'dark' ? '#1F2937' : '#FFFFFF',
           }}>
-          <BottomSheetView style={{ flex: 1 }}>
+          <BottomSheetScrollView style={{ flex: 1 }}>
             {selectedBook ? (
               <View className="p-4" style={{ flexGrow: 1 }}>
                 <Image
@@ -360,7 +360,7 @@ const Explore = () => {
                 <Text style={{ color: headingColor }}>No book selected</Text>
               </View>
             )}
-          </BottomSheetView>
+          </BottomSheetScrollView>
         </BottomSheet>
       </GestureHandlerRootView>
     </SafeAreaView>

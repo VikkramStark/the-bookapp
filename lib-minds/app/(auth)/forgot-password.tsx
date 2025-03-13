@@ -104,7 +104,7 @@ export default function ForgotPasswordScreen() {
           )}
 
           <Pressable
-            className={`flex items-center rounded-full border-2 border-black bg-amber-400 p-4 ${loading ? 'opacity-50' : ''}`}
+            className={`flex items-center rounded-full border-2 border-black bg-[#1A9AAF] p-4 ${loading ? 'opacity-50' : ''}`}
             onPress={handleReset}
             disabled={loading}
             accessibilityLabel="Send password reset email"

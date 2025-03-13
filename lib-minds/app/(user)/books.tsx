@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator, Image, ScrollView, Pressable } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import { FlashList } from '@shopify/flash-list';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, {  BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import { useAuth } from '../../hooks/useAuth';
 import { db } from '../../utils/firebase';
 import { doc, getDoc, setDoc, Timestamp, query, where, collection, getDocs } from 'firebase/firestore';
@@ -232,7 +232,7 @@ const Books = () => {
           }}
           onClose={() => setRequestSent(false)} 
         >
-          <BottomSheetView  className='flex-1 p-4'>
+          <BottomSheetScrollView  className='flex-1 p-4'>
             {selectedBook ? (
               <ScrollView showsVerticalScrollIndicator={false} className='flex-1'>
                 <Image
@@ -339,7 +339,7 @@ const Books = () => {
             ) : (
               <Text>No book selected</Text>
             )}
-          </BottomSheetView>
+          </BottomSheetScrollView>
         </BottomSheet>
       </GestureHandlerRootView>
     </SafeAreaView>

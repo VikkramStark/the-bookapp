@@ -108,7 +108,7 @@ const ProfileScreen = () => {
           </Text>
           <View className="mt-4 flex gap-3">
             <Pressable
-              className="flex flex-row items-center justify-between rounded-lg bg-amber-300 p-2"
+              className="flex flex-row items-center justify-between rounded-lg bg-[#1A9AAF] p-2"
               onPress={handleProfilePress}
             >
               <View className="flex flex-row items-center gap-4">

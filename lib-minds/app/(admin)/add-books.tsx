@@ -202,7 +202,7 @@ className={`border-2 h-24 rounded-md p-2 ${theme === 'dark' ? 'border-white plac
           />
         </View>
         <Pressable
-          className="mt-6  flex items-center rounded-full border-2 border-black bg-amber-400 p-4"
+          className="mt-6  flex items-center rounded-full border-2 border-black bg-[#1A9AAF] p-4"
           onPress={handleAddBook}
           disabled={loading}
         >

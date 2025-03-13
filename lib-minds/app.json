@@ -18,6 +18,15 @@
         {
           "photosPermission": "The app accesses your photos to let you upload images if you login as admin"
         }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000",
+          "image": "./assets/splashscreen.png",
+          
+          "imageWidth": 200
+        }
       ]
       ],
       
@@ -34,8 +43,8 @@
      "userInterfaceStyle": "light",
     
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
+      "image": "./assets/splashscreen.png",
+      "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
     "assetBundlePatterns": [
