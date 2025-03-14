@@ -1,6 +1,6 @@
 import { ScrollView, ActivityIndicator, RefreshControl, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import HomeScroll from '../../components/layout/HomeScroll';
 import HomeInfoCard from '../../components/layout/HomeInfoCard';
 import { useAuth } from '../../hooks/useAuth';
@@ -20,7 +20,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchUserData = async (isRefreshing = false) => {
+  const fetchUserData = useCallback(async (isRefreshing = false) => {
     if (!user) return;
 
     if (!isRefreshing) setLoading(true);
@@ -34,24 +34,18 @@ const Home = () => {
       console.error('Error fetching user data:', error);
     } finally {
       if (!isRefreshing) setLoading(false);
+      if (isRefreshing) setRefreshing(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchUserData();
-  }, [user]);
+  }, [fetchUserData]);
 
-  const onRefresh = async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    try {
-      await fetchUserData(true);
-      // HomeScroll components will also refetch their data via their own fetchBooks calls
-    } catch (error) {
-      console.error('Error refreshing user data:', error);
-    } finally {
-      setRefreshing(false);
-    }
-  };
+    await fetchUserData(true); 
+  }, [fetchUserData]);
 
   if (loading) {
     return (
@@ -82,7 +76,7 @@ const Home = () => {
               />
             )}
           </View>
-          <ActivityIndicator size="large" className="mt-4" />
+          <ActivityIndicator size="large" className="mt-4" color={headingColor} />
         </ScrollView>
       </SafeAreaView>
     );
@@ -136,7 +130,7 @@ const Home = () => {
             onRefresh={onRefresh}
           />
           <HomeScroll
-            title="Wishlist"
+            title="Favourites"
             goto="/(user)/wishlist"
             isBorrowed={false}
             isAdmin={false}

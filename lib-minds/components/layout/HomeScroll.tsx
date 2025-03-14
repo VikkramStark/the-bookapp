@@ -4,7 +4,7 @@ import { FlashList } from '@shopify/flash-list';
 import BookCard from '../ui/BookCard';
 import { db } from '../../utils/firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useTheme } from '../../ThemeContext';
 
 type HomeScrollProps = {
@@ -12,9 +12,9 @@ type HomeScrollProps = {
   goto: Href;
   isBorrowed: boolean;
   isAdmin: boolean;
-  userId: string | null; // Pass user ID explicitly instead of relying on useAuth
-  refreshing: boolean; // Controlled by parent
-  onRefresh: () => Promise<void>; // Triggered by parent
+  userId: string | null;
+  refreshing: boolean;
+  onRefresh: () => Promise<void>;
 };
 
 type Book = {
@@ -29,7 +29,7 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin, userId, r
   const { theme } = useTheme();
   const headingColor = theme === 'light' ? 'black' : 'white';
 
-  const fetchBooks = async () => {
+  const fetchBooks = useCallback(async (forceRefresh = false) => {
     setLoading(true);
     try {
       if (isAdmin) {
@@ -37,7 +37,7 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin, userId, r
           collection(db, 'books'),
           where('status', '==', isBorrowed ? 'borrowed' : 'available')
         );
-        const booksSnapshot = await getDocs(booksQuery);
+        const booksSnapshot = await getDocs(booksQuery); 
         const booksData = booksSnapshot.docs.map((doc) => ({
           id: doc.id,
           imgUrl: doc.data().imgUrl || '',
@@ -69,7 +69,6 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin, userId, r
           imgUrl: doc.data().imgUrl || '',
           returnDays: doc.data().returnDays || 0,
         }));
-
         setBooks(booksData);
       }
     } catch (error) {
@@ -77,20 +76,30 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin, userId, r
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, isBorrowed, isAdmin, title]);
 
   useEffect(() => {
     fetchBooks();
-  }, [userId, isBorrowed, isAdmin]);
+  }, [fetchBooks]);
 
-  // Refresh is triggered by the parent via onRefresh
-  const handleRefresh = async () => {
-    await onRefresh(); // Parent handles the refresh, including refetching HomeScroll data
-    await fetchBooks(); // Refetch books locally after parent refresh
-  };
+  const handleRefresh = useCallback(async () => {
+    
+    try {
+      await onRefresh();
+      await fetchBooks(true); 
+    } catch (error) {
+      console.error('Refresh error:', error);
+    }
+  }, [onRefresh, fetchBooks, title]);
+
+  useEffect(() => {
+    if (refreshing) {
+      fetchBooks(true);
+    }
+  }, [refreshing, fetchBooks, title]);
 
   if (loading) {
-    return <ActivityIndicator size="large" className="mt-4" />;
+    return <ActivityIndicator size="large" className="mt-4" color={headingColor} />;
   }
 
   return (
@@ -108,7 +117,12 @@ export default function HomeScroll({ goto, title, isBorrowed, isAdmin, userId, r
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 16 }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+            }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

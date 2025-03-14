@@ -1,6 +1,7 @@
-import { View, Text, ActivityIndicator, Image, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, ActivityIndicator, Image, ScrollView, RefreshControl, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons'; 
 import BookCard from '../../components/ui/BookCard';
 import { FlashList } from '@shopify/flash-list';
 import { useAuth } from '../../hooks/useAuth';
@@ -140,6 +141,23 @@ const Wishlist = () => {
     }
   };
 
+  const handleRemoveFromWishlist = async (bookId: string) => {
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        wishlist: arrayRemove(bookId),
+      });
+
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+      alert('Book removed from your wishlist.');
+    } catch (error) {
+      console.error('Error removing book from wishlist:', error);
+      alert('Failed to remove book from wishlist.');
+    }
+  };
+
   const handleBorrowDaysChange = (value: number) => {
     if (selectedBook) {
       setSelectedBook((prev) => (prev ? { ...prev, returnDays: Math.round(value) } : null));
@@ -230,17 +248,31 @@ const Wishlist = () => {
               numColumns={2}
               estimatedItemSize={6}
               renderItem={({ item }) => (
-                <BookCard
-                  days={item.returnDays.toString()}
-                  isReturn={false}
-                  imgUrl={item.imgUrl}
-                  height="64"
-                  width="48"
-                  isadmin={false}
-                  onAvailablePress={
-                    item.status === 'available' ? () => handleBorrowPress(item) : undefined
-                  }
-                />
+                <View className="m-2 overflow-hidden">
+                  <View className="relative h-64 w-48">
+                    <Image
+                      source={{ uri: item.imgUrl }}
+                      className="h-full w-full rounded-lg"
+                      resizeMode="cover"
+                    />
+                    <View className="absolute end-0 flex h-full justify-between">
+                      <Pressable
+                        onPress={() => handleRemoveFromWishlist(item.id)}
+                        className="m-2 self-end rounded-full bg-white p-2"
+                      >
+                        <Ionicons name="trash-outline" size={24} color="red" />
+                      </Pressable>
+                      {item.status === 'available' && (
+                        <Pressable
+                          onPress={() => handleBorrowPress(item)}
+                          className="m-2 rounded-lg border-2 border-black bg-white p-3"
+                        >
+                          <Text>Borrow</Text>
+                        </Pressable>
+                      )}
+                    </View>
+                  </View>
+                </View>
               )}
               refreshControl={
                 <RefreshControl
